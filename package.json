@@ -1,0 +1,24 @@
+{
+  "name": "assumption-validation",
+  "version": "1.0.0",
+  "description": "A comprehensive web-based tool for product coaches to conduct systematic discovery assessments and receive intelligent technique recommendations based on client findings.",
+  "main": "run-tests.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surajohn/assumption-validation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/surajohn/assumption-validation/issues"
+  },
+  "homepage": "https://github.com/surajohn/assumption-validation#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
+}

@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════
+   HOW TO START LEA (Discovery Verification System)
+═══════════════════════════════════════════════════════
+
+STEP 1: Open Terminal
+----------------------
+• Press Cmd+Space
+• Type "Terminal"
+• Press Enter
+
+STEP 2: Drag and Drop
+---------------------
+• Drag the file "START-LEA.sh" from this folder
+• Drop it into the Terminal window
+• Press Enter
+
+That's it! LEA will open in your browser automatically.
+
+═══════════════════════════════════════════════════════
+
+ALTERNATE METHOD (Copy/Paste):
+------------------------------
+Copy this command and paste it in Terminal:
+
+cd ~/Assumption-Validation && ./START-LEA.sh
+
+═══════════════════════════════════════════════════════
+
+FOLDER CONTENTS:
+---------------
+✅ index.html - Main application file
+✅ Discovery-v2-TechCorp-Demo-2025-12-25.json - Demo data
+✅ START-LEA.sh - Launcher script
+✅ README.md - Documentation
+✅ backups/ - Backup files
+
+═══════════════════════════════════════════════════════

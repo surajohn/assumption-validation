@@ -1,0 +1,811 @@
+{
+  "version": "2.0",
+  "exportDate": "2025-12-25T10:30:00.000Z",
+  "metadata": {
+    "clientName": "TechCorp",
+    "engagementDate": "2025-12-25",
+    "coach": "Your Name",
+    "lastModified": "2025-12-25T10:30:00.000Z"
+  },
+  "questions": [
+    {
+      "questionId": "q1",
+      "phase": 1,
+      "text": "Why does this product exist?",
+      "findings": "No clear product vision. Team is unclear about objectives and jumping to solutions without understanding the problem. Operating as a feature factory with stakeholders dictating features.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "workshop"],
+      "notes": "Leadership doesn't communicate strategy. Team feels like order takers.",
+      "lastUpdated": "2025-12-25T09:15:00.000Z"
+    },
+    {
+      "questionId": "q2",
+      "phase": 1,
+      "text": "Who are the users and customers?",
+      "findings": "We haven't talked to customers in 6 months. Team has no direct customer contact. All insights filtered through sales and support tickets. No customer interviews or research conducted.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "document"],
+      "notes": "Last user research was 6+ months ago. Relying on secondhand information.",
+      "lastUpdated": "2025-12-25T09:20:00.000Z"
+    },
+    {
+      "questionId": "q3",
+      "phase": 1,
+      "text": "What is the current state of the product/market?",
+      "findings": "Product has grown organically without clear strategy. Competitor analysis is outdated. Market positioning unclear. Churn rate increasing but team doesn't know why.",
+      "status": "answered",
+      "discoveryMethods": ["document", "data"],
+      "notes": "Data shows declining engagement but no investigation into root causes.",
+      "lastUpdated": "2025-12-25T09:25:00.000Z"
+    },
+    {
+      "questionId": "q4",
+      "phase": 1,
+      "text": "What are the business goals and constraints?",
+      "findings": "Business goals exist but aren't shared with team. Team doesn't understand revenue model or how their work impacts business outcomes. Working in the dark.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "PM knows business goals but hasn't communicated to engineers.",
+      "lastUpdated": "2025-12-25T09:30:00.000Z"
+    },
+    {
+      "questionId": "q5",
+      "phase": 2,
+      "text": "What problem does this solve for users?",
+      "findings": "Confusing checkout flow causing 40% cart abandonment. Users report frustration but team hasn't observed actual usage. Need quick validation before engineering investment. No usability testing conducted.",
+      "status": "answered",
+      "discoveryMethods": ["data", "document"],
+      "notes": "Analytics show the problem but team hasn't talked to users to understand why.",
+      "lastUpdated": "2025-12-25T09:35:00.000Z"
+    },
+    {
+      "questionId": "q6",
+      "phase": 2,
+      "text": "How will we measure success?",
+      "findings": "No clear success metrics defined for most features. Too many features fail post-launch. No way to validate if customers will actually use features before building. Shipping features into the void.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "document"],
+      "notes": "Team tracks deployment velocity but not customer outcomes.",
+      "lastUpdated": "2025-12-25T09:40:00.000Z"
+    },
+    {
+      "questionId": "q7",
+      "phase": 2,
+      "text": "What value does this create?",
+      "findings": "Unclear value proposition. Features are built because stakeholders ask for them, not because they solve validated customer problems. No value testing or validation.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Team can't articulate why customers would care about most features.",
+      "lastUpdated": "2025-12-25T09:45:00.000Z"
+    },
+    {
+      "questionId": "q8",
+      "phase": 2,
+      "text": "What are the key assumptions?",
+      "findings": "Many unvalidated assumptions. Team assumes they know what customers want. Assumptions documented but never tested. Features shipped based on hope.",
+      "status": "answered",
+      "discoveryMethods": ["workshop"],
+      "notes": "Created assumption list in workshop but no plan to validate them.",
+      "lastUpdated": "2025-12-25T09:50:00.000Z"
+    },
+    {
+      "questionId": "q9",
+      "phase": 3,
+      "text": "Who owns this product decision?",
+      "findings": "Hidden stakeholders control decisions. Unclear decision-making authority. PM has title but no real empowerment. Decisions reversed at last minute by executives.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "observation"],
+      "notes": "Culture of HiPPO (Highest Paid Person's Opinion). PM feels powerless.",
+      "lastUpdated": "2025-12-25T09:55:00.000Z"
+    },
+    {
+      "questionId": "q10",
+      "phase": 3,
+      "text": "What is the team structure and composition?",
+      "findings": "Team of 1 PM, 4 engineers, 1 designer. No dedicated product trio. PM and engineer rarely collaborate on discovery. Designer only involved for UI work, not discovery.",
+      "status": "answered",
+      "discoveryMethods": ["observation"],
+      "notes": "Siloed work. No cross-functional collaboration on problem definition.",
+      "lastUpdated": "2025-12-25T10:00:00.000Z"
+    },
+    {
+      "questionId": "q11",
+      "phase": 3,
+      "text": "How does this team work with other teams?",
+      "findings": "Dependencies on platform team create bottlenecks. No clear communication channels. Teams work in isolation. Handoffs are painful.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Platform team is overwhelmed. Feature teams wait weeks for support.",
+      "lastUpdated": "2025-12-25T10:05:00.000Z"
+    },
+    {
+      "questionId": "q12",
+      "phase": 3,
+      "text": "What is the current development process?",
+      "findings": "Agile theater - standups and sprints but no empowerment. Two-week sprints filled with stakeholder requests. Delivery cadence is good but outcomes are poor.",
+      "status": "answered",
+      "discoveryMethods": ["observation"],
+      "notes": "Going through motions of agile without the mindset shift.",
+      "lastUpdated": "2025-12-25T10:10:00.000Z"
+    },
+    {
+      "questionId": "q13",
+      "phase": 4,
+      "text": "What are the team dynamics and capabilities?",
+      "findings": "Team has skill gaps and needs development. No time for discovery because roadmap is packed. New to discovery practices. Engineers willing but PM doesn't know how to lead discovery.",
+      "status": "answered",
+      "discoveryMethods": ["observation", "interview"],
+      "notes": "Good team culture but lacking product skills and practices.",
+      "lastUpdated": "2025-12-25T10:12:00.000Z"
+    },
+    {
+      "questionId": "q14",
+      "phase": 4,
+      "text": "What organizational constraints exist?",
+      "findings": "Feature roadmap dictated from above. Loss of autonomy. Team can't say no to stakeholders. Waterfall planning process disguised as agile. Quarterly planning locks team in.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "document"],
+      "notes": "Organization says they want empowered teams but structure prevents it.",
+      "lastUpdated": "2025-12-25T10:15:00.000Z"
+    },
+    {
+      "questionId": "q15",
+      "phase": 4,
+      "text": "What cultural factors influence this work?",
+      "findings": "Risk-averse culture. Failure is punished. Innovation theater - talks about innovation but rewards playing it safe. Executives want transformation but resist changing how decisions are made.",
+      "status": "answered",
+      "discoveryMethods": ["observation"],
+      "notes": "Culture change needed before practices can change.",
+      "lastUpdated": "2025-12-25T10:18:00.000Z"
+    },
+    {
+      "questionId": "q16",
+      "phase": 4,
+      "text": "What stakeholder dynamics are at play?",
+      "findings": "Competing stakeholder priorities. Sales, marketing, and support all want different features. No clear prioritization framework. Loudest voice wins. Political decision-making.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Stakeholder alignment is critical blocker. Need stakeholder testing approach.",
+      "lastUpdated": "2025-12-25T10:20:00.000Z"
+    },
+    {
+      "questionId": "q17",
+      "phase": 5,
+      "text": "What hypotheses need validation?",
+      "findings": "Built list of hypotheses but no validation plan. Team doesn't know how to test assumptions. Need framework for assumption testing. Continuous discovery would help but team doesn't practice it.",
+      "status": "answered",
+      "discoveryMethods": ["workshop"],
+      "notes": "Workshop identified 20+ critical assumptions. Zero have been tested.",
+      "lastUpdated": "2025-12-25T10:22:00.000Z"
+    },
+    {
+      "questionId": "q18",
+      "phase": 5,
+      "text": "What are the biggest risks?",
+      "findings": "Biggest risk is building wrong things. Technical feasibility is fine but value and viability are questionable. Need discovery sprints to derisk before committing engineering.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Team confuses technical risk with product risk. Strong engineering, weak discovery.",
+      "lastUpdated": "2025-12-25T10:24:00.000Z"
+    },
+    {
+      "questionId": "q19",
+      "phase": 5,
+      "text": "What evidence exists to support this direction?",
+      "findings": "Evidence is weak. Anecdotes from sales calls. Support tickets. No systematic customer research. No prototypes tested. No value validation. Betting on opinions.",
+      "status": "answered",
+      "discoveryMethods": ["document"],
+      "notes": "Team needs to learn how to gather and evaluate evidence.",
+      "lastUpdated": "2025-12-25T10:26:00.000Z"
+    },
+    {
+      "questionId": "q20",
+      "phase": 5,
+      "text": "What alternatives were considered?",
+      "findings": "First idea is only idea. No ideation or exploration of alternatives. Opportunity solution tree would help but team jumps straight to solutions. Need to slow down and explore problem space.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Jumping to solutions is cultural norm. Need structured ideation.",
+      "lastUpdated": "2025-12-25T10:28:00.000Z"
+    },
+    {
+      "questionId": "q21",
+      "phase": 5,
+      "text": "How will we learn and iterate?",
+      "findings": "No learning loop. Features are shipped and forgotten. No post-launch review. No continuous discovery practice. Team needs coaching on building discovery muscle.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Ship and forget mentality. No feedback loops established.",
+      "lastUpdated": "2025-12-25T10:30:00.000Z"
+    }
+  ],
+  "analysis": {
+    "coverage": {
+      "totalQuestions": 21,
+      "answeredQuestions": 21,
+      "completionPercentage": 100
+    },
+    "findings": [
+      {
+        "questionId": "q1",
+        "phase": 1,
+        "question": "Why does this product exist?",
+        "findings": "No clear product vision. Team is unclear about objectives and jumping to solutions without understanding the problem. Operating as a feature factory with stakeholders dictating features.",
+        "notes": "Leadership doesn't communicate strategy. Team feels like order takers.",
+        "discoveryMethods": ["interview", "workshop"],
+        "lastUpdated": "2025-12-25T09:15:00.000Z"
+      },
+      {
+        "questionId": "q2",
+        "phase": 1,
+        "question": "Who are the users and customers?",
+        "findings": "We haven't talked to customers in 6 months. Team has no direct customer contact. All insights filtered through sales and support tickets. No customer interviews or research conducted.",
+        "notes": "Last user research was 6+ months ago. Relying on secondhand information.",
+        "discoveryMethods": ["interview", "document"],
+        "lastUpdated": "2025-12-25T09:20:00.000Z"
+      },
+      {
+        "questionId": "q3",
+        "phase": 1,
+        "question": "What is the current state of the product/market?",
+        "findings": "Product has grown organically without clear strategy. Competitor analysis is outdated. Market positioning unclear. Churn rate increasing but team doesn't know why.",
+        "notes": "Data shows declining engagement but no investigation into root causes.",
+        "discoveryMethods": ["document", "data"],
+        "lastUpdated": "2025-12-25T09:25:00.000Z"
+      },
+      {
+        "questionId": "q4",
+        "phase": 1,
+        "question": "What are the business goals and constraints?",
+        "findings": "Business goals exist but aren't shared with team. Team doesn't understand revenue model or how their work impacts business outcomes. Working in the dark.",
+        "notes": "PM knows business goals but hasn't communicated to engineers.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T09:30:00.000Z"
+      },
+      {
+        "questionId": "q5",
+        "phase": 2,
+        "question": "What problem does this solve for users?",
+        "findings": "Confusing checkout flow causing 40% cart abandonment. Users report frustration but team hasn't observed actual usage. Need quick validation before engineering investment. No usability testing conducted.",
+        "notes": "Analytics show the problem but team hasn't talked to users to understand why.",
+        "discoveryMethods": ["data", "document"],
+        "lastUpdated": "2025-12-25T09:35:00.000Z"
+      },
+      {
+        "questionId": "q6",
+        "phase": 2,
+        "question": "How will we measure success?",
+        "findings": "No clear success metrics defined for most features. Too many features fail post-launch. No way to validate if customers will actually use features before building. Shipping features into the void.",
+        "notes": "Team tracks deployment velocity but not customer outcomes.",
+        "discoveryMethods": ["interview", "document"],
+        "lastUpdated": "2025-12-25T09:40:00.000Z"
+      },
+      {
+        "questionId": "q7",
+        "phase": 2,
+        "question": "What value does this create?",
+        "findings": "Unclear value proposition. Features are built because stakeholders ask for them, not because they solve validated customer problems. No value testing or validation.",
+        "notes": "Team can't articulate why customers would care about most features.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T09:45:00.000Z"
+      },
+      {
+        "questionId": "q8",
+        "phase": 2,
+        "question": "What are the key assumptions?",
+        "findings": "Many unvalidated assumptions. Team assumes they know what customers want. Assumptions documented but never tested. Features shipped based on hope.",
+        "notes": "Created assumption list in workshop but no plan to validate them.",
+        "discoveryMethods": ["workshop"],
+        "lastUpdated": "2025-12-25T09:50:00.000Z"
+      },
+      {
+        "questionId": "q9",
+        "phase": 3,
+        "question": "Who owns this product decision?",
+        "findings": "Hidden stakeholders control decisions. Unclear decision-making authority. PM has title but no real empowerment. Decisions reversed at last minute by executives.",
+        "notes": "Culture of HiPPO (Highest Paid Person's Opinion). PM feels powerless.",
+        "discoveryMethods": ["interview", "observation"],
+        "lastUpdated": "2025-12-25T09:55:00.000Z"
+      },
+      {
+        "questionId": "q10",
+        "phase": 3,
+        "question": "What is the team structure and composition?",
+        "findings": "Team of 1 PM, 4 engineers, 1 designer. No dedicated product trio. PM and engineer rarely collaborate on discovery. Designer only involved for UI work, not discovery.",
+        "notes": "Siloed work. No cross-functional collaboration on problem definition.",
+        "discoveryMethods": ["observation"],
+        "lastUpdated": "2025-12-25T10:00:00.000Z"
+      },
+      {
+        "questionId": "q11",
+        "phase": 3,
+        "question": "How does this team work with other teams?",
+        "findings": "Dependencies on platform team create bottlenecks. No clear communication channels. Teams work in isolation. Handoffs are painful.",
+        "notes": "Platform team is overwhelmed. Feature teams wait weeks for support.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T10:05:00.000Z"
+      },
+      {
+        "questionId": "q12",
+        "phase": 3,
+        "question": "What is the current development process?",
+        "findings": "Agile theater - standups and sprints but no empowerment. Two-week sprints filled with stakeholder requests. Delivery cadence is good but outcomes are poor.",
+        "notes": "Going through motions of agile without the mindset shift.",
+        "discoveryMethods": ["observation"],
+        "lastUpdated": "2025-12-25T10:10:00.000Z"
+      },
+      {
+        "questionId": "q13",
+        "phase": 4,
+        "question": "What are the team dynamics and capabilities?",
+        "findings": "Team has skill gaps and needs development. No time for discovery because roadmap is packed. New to discovery practices. Engineers willing but PM doesn't know how to lead discovery.",
+        "notes": "Good team culture but lacking product skills and practices.",
+        "discoveryMethods": ["observation", "interview"],
+        "lastUpdated": "2025-12-25T10:12:00.000Z"
+      },
+      {
+        "questionId": "q14",
+        "phase": 4,
+        "question": "What organizational constraints exist?",
+        "findings": "Feature roadmap dictated from above. Loss of autonomy. Team can't say no to stakeholders. Waterfall planning process disguised as agile. Quarterly planning locks team in.",
+        "notes": "Organization says they want empowered teams but structure prevents it.",
+        "discoveryMethods": ["interview", "document"],
+        "lastUpdated": "2025-12-25T10:15:00.000Z"
+      },
+      {
+        "questionId": "q15",
+        "phase": 4,
+        "question": "What cultural factors influence this work?",
+        "findings": "Risk-averse culture. Failure is punished. Innovation theater - talks about innovation but rewards playing it safe. Executives want transformation but resist changing how decisions are made.",
+        "notes": "Culture change needed before practices can change.",
+        "discoveryMethods": ["observation"],
+        "lastUpdated": "2025-12-25T10:18:00.000Z"
+      },
+      {
+        "questionId": "q16",
+        "phase": 4,
+        "question": "What stakeholder dynamics are at play?",
+        "findings": "Competing stakeholder priorities. Sales, marketing, and support all want different features. No clear prioritization framework. Loudest voice wins. Political decision-making.",
+        "notes": "Stakeholder alignment is critical blocker. Need stakeholder testing approach.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T10:20:00.000Z"
+      },
+      {
+        "questionId": "q17",
+        "phase": 5,
+        "question": "What hypotheses need validation?",
+        "findings": "Built list of hypotheses but no validation plan. Team doesn't know how to test assumptions. Need framework for assumption testing. Continuous discovery would help but team doesn't practice it.",
+        "notes": "Workshop identified 20+ critical assumptions. Zero have been tested.",
+        "discoveryMethods": ["workshop"],
+        "lastUpdated": "2025-12-25T10:22:00.000Z"
+      },
+      {
+        "questionId": "q18",
+        "phase": 5,
+        "question": "What are the biggest risks?",
+        "findings": "Biggest risk is building wrong things. Technical feasibility is fine but value and viability are questionable. Need discovery sprints to derisk before committing engineering.",
+        "notes": "Team confuses technical risk with product risk. Strong engineering, weak discovery.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T10:24:00.000Z"
+      },
+      {
+        "questionId": "q19",
+        "phase": 5,
+        "question": "What evidence exists to support this direction?",
+        "findings": "Evidence is weak. Anecdotes from sales calls. Support tickets. No systematic customer research. No prototypes tested. No value validation. Betting on opinions.",
+        "notes": "Team needs to learn how to gather and evaluate evidence.",
+        "discoveryMethods": ["document"],
+        "lastUpdated": "2025-12-25T10:26:00.000Z"
+      },
+      {
+        "questionId": "q20",
+        "phase": 5,
+        "question": "What alternatives were considered?",
+        "findings": "First idea is only idea. No ideation or exploration of alternatives. Opportunity solution tree would help but team jumps straight to solutions. Need to slow down and explore problem space.",
+        "notes": "Jumping to solutions is cultural norm. Need structured ideation.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T10:28:00.000Z"
+      },
+      {
+        "questionId": "q21",
+        "phase": 5,
+        "question": "How will we learn and iterate?",
+        "findings": "No learning loop. Features are shipped and forgotten. No post-launch review. No continuous discovery practice. Team needs coaching on building discovery muscle.",
+        "notes": "Ship and forget mentality. No feedback loops established.",
+        "discoveryMethods": ["interview"],
+        "lastUpdated": "2025-12-25T10:30:00.000Z"
+      }
+    ],
+    "gaps": [],
+    "discoveryMethods": {
+      "interview": {
+        "label": "Interview",
+        "icon": "🗣️",
+        "count": 15
+      },
+      "workshop": {
+        "label": "Workshop",
+        "icon": "👥",
+        "count": 4
+      },
+      "observation": {
+        "label": "Observation",
+        "icon": "👀",
+        "count": 6
+      },
+      "document": {
+        "label": "Document Review",
+        "icon": "📄",
+        "count": 8
+      },
+      "survey": {
+        "label": "Survey",
+        "icon": "📊",
+        "count": 0
+      },
+      "data": {
+        "label": "Data Analysis",
+        "icon": "📈",
+        "count": 2
+      }
+    },
+    "phaseInsights": {
+      "phase1": {
+        "name": "Foundation & Context",
+        "total": 4,
+        "answered": 4,
+        "percentage": 100
+      },
+      "phase2": {
+        "name": "Success & Outcomes",
+        "total": 4,
+        "answered": 4,
+        "percentage": 100
+      },
+      "phase3": {
+        "name": "Structure & Ownership",
+        "total": 4,
+        "answered": 4,
+        "percentage": 100
+      },
+      "phase4": {
+        "name": "Team Dynamics & Constraints",
+        "total": 4,
+        "answered": 4,
+        "percentage": 100
+      },
+      "phase5": {
+        "name": "Untested Assumptions",
+        "total": 5,
+        "answered": 5,
+        "percentage": 100
+      }
+    },
+    "recommendedTechniques": {
+      "discovery": [
+        {
+          "name": "Customer Interviews",
+          "category": "Customer Research",
+          "description": "Qualitative discussions with customers to discover opportunities. Pro tip: bring engineer along.",
+          "whenToUse": "You can never do too many. Essential for understanding customer problems and needs.",
+          "timeCommitment": "1-2 hours per interview, ongoing practice",
+          "resourcesNeeded": ["Product Manager", "ideally + Engineer"],
+          "teamMaturity": ["beginner", "intermediate", "advanced"],
+          "outcomes": [
+            "Deep problem understanding",
+            "Opportunity discovery",
+            "Validated assumptions",
+            "Customer empathy"
+          ],
+          "matchScore": 40,
+          "matchReasons": [
+            "Detected: \"interviews\"",
+            "Discovery findings align with: \"haven't talked to customers\"",
+            "Discovery findings align with: \"need user insights\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Team Objective",
+          "category": "Framing & Planning",
+          "description": "Frame work as desired outcome, not list of features. What business results are we trying to achieve?",
+          "whenToUse": "Start of any significant work. Essential for moving from feature factory to empowered team.",
+          "timeCommitment": "1-2 hours to define, ongoing alignment",
+          "resourcesNeeded": ["Product Manager", "stakeholders"],
+          "teamMaturity": ["beginner", "intermediate", "advanced"],
+          "outcomes": [
+            "Clarity on outcomes vs outputs",
+            "Team empowerment",
+            "Strategic alignment",
+            "Measurable results"
+          ],
+          "matchScore": 35,
+          "matchReasons": [
+            "Detected: \"feature factory\"",
+            "Detected: \"objectives\"",
+            "Discovery findings align with: \"unclear objectives\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Opportunity Assessment",
+          "category": "Framing & Planning",
+          "description": "Four questions: What business objective? How will we measure success? What customer problem? What alternatives did we consider?",
+          "whenToUse": "Before committing to build anything significant. Validate business case and customer value.",
+          "timeCommitment": "1-2 weeks of research and validation",
+          "resourcesNeeded": ["Product Manager", "stakeholders"],
+          "teamMaturity": ["intermediate", "advanced"],
+          "outcomes": [
+            "Business case validated",
+            "Customer problem clear",
+            "Success metrics defined",
+            "Alternatives explored"
+          ],
+          "matchScore": 30,
+          "matchReasons": [
+            "Discovery findings align with: \"jumping to solutions\"",
+            "Detected: \"validation\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "User Prototype",
+          "category": "Prototyping",
+          "description": "Simulation of user experience requiring no engineering. Test with users before building.",
+          "whenToUse": "Rapid internal iteration and user testing before engineering investment",
+          "timeCommitment": "Hours to days (vs weeks to build real feature)",
+          "resourcesNeeded": ["Designer", "Product Manager"],
+          "teamMaturity": ["beginner", "intermediate", "advanced"],
+          "outcomes": [
+            "Rapid iteration",
+            "User feedback before coding",
+            "Validated usability",
+            "Risk reduction"
+          ],
+          "matchScore": 30,
+          "matchReasons": [
+            "Discovery findings align with: \"need quick validation\"",
+            "Discovery findings align with: \"before engineering\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Stakeholder Testing",
+          "category": "Viability Testing",
+          "description": "Uncover business constraints before building. Which stakeholders need to approve? What are their concerns?",
+          "whenToUse": "When viability risk is high. Before investing in solutions that stakeholders might block.",
+          "timeCommitment": "1-2 weeks of stakeholder conversations",
+          "resourcesNeeded": ["Product Manager"],
+          "teamMaturity": ["intermediate", "advanced"],
+          "outcomes": [
+            "Business constraints surfaced early",
+            "Stakeholder buy-in",
+            "Viability validated",
+            "Reduced late-stage surprises"
+          ],
+          "matchScore": 25,
+          "matchReasons": [
+            "Detected: \"stakeholders\"",
+            "Discovery findings align with: \"hidden stakeholders\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Continuous Discovery",
+          "category": "Discovery Workflow",
+          "description": "Weekly touchpoints with customers. Build discovery muscle through consistent practice.",
+          "whenToUse": "Ongoing practice for all product teams. Essential habit for empowered teams.",
+          "timeCommitment": "Weekly cadence (minimum 2 hours/week)",
+          "resourcesNeeded": ["Product trio: PM, Designer, Engineer"],
+          "teamMaturity": ["intermediate", "advanced"],
+          "outcomes": [
+            "Regular customer insights",
+            "Reduced feature failure rate",
+            "Team confidence in decisions",
+            "Discovery becomes habit"
+          ],
+          "matchScore": 25,
+          "matchReasons": [
+            "Discovery findings align with: \"too many features fail post-launch\"",
+            "Discovery findings align with: \"continuous discovery\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Assumption Testing",
+          "category": "Discovery Workflow",
+          "description": "Identify and systematically test critical assumptions. Validate/invalidate before building.",
+          "whenToUse": "When you have many unvalidated assumptions. Turn opinions into evidence.",
+          "timeCommitment": "1-3 weeks depending on number of assumptions",
+          "resourcesNeeded": ["Product Manager", "Engineer", "Designer"],
+          "teamMaturity": ["beginner", "intermediate", "advanced"],
+          "outcomes": [
+            "Risky assumptions identified",
+            "Evidence-based decisions",
+            "Reduced product risk",
+            "Clearer path forward"
+          ],
+          "matchScore": 25,
+          "matchReasons": [
+            "Detected: \"assumptions\"",
+            "Discovery findings align with: \"unvalidated assumptions\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Discovery Sprints",
+          "category": "Discovery Workflow",
+          "description": "One week sprint: understand problem deeply, explore solutions, prototype and test best ideas.",
+          "whenToUse": "Time-boxed discovery for new problems. Great for teams new to discovery.",
+          "timeCommitment": "1 week intensive",
+          "resourcesNeeded": ["Product trio: PM, Designer, Engineer"],
+          "teamMaturity": ["beginner", "intermediate"],
+          "outcomes": [
+            "Rapid problem exploration",
+            "Tested solutions",
+            "Team alignment",
+            "Discovery practice"
+          ],
+          "matchScore": 20,
+          "matchReasons": [
+            "Discovery findings align with: \"new to discovery\"",
+            "Discovery findings align with: \"derisk before committing\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Opportunity Solution Tree",
+          "category": "Framing & Planning",
+          "description": "Visual map of opportunity space. Explore multiple solutions per opportunity before choosing.",
+          "whenToUse": "When jumping to first solution. Forces exploration of problem and solution space.",
+          "timeCommitment": "Ongoing tool (1-2 hours initial setup, weekly updates)",
+          "resourcesNeeded": ["Product trio: PM, Designer, Engineer"],
+          "teamMaturity": ["intermediate", "advanced"],
+          "outcomes": [
+            "Solution alternatives explored",
+            "Problem space mapped",
+            "Better solution choices",
+            "Visual alignment tool"
+          ],
+          "matchScore": 20,
+          "matchReasons": [
+            "Detected: \"solutions\"",
+            "Discovery findings align with: \"explore problem space\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Usability Testing",
+          "category": "Usability Testing",
+          "description": "Watch users perform tasks with your product. Identify usability issues before launch.",
+          "whenToUse": "When usability risk is high. Validate that users can actually use your solution.",
+          "timeCommitment": "1-2 weeks (recruit, test, synthesize)",
+          "resourcesNeeded": ["Designer", "Product Manager", "test participants"],
+          "teamMaturity": ["beginner", "intermediate", "advanced"],
+          "outcomes": [
+            "Usability issues found",
+            "Task completion validated",
+            "User frustrations surfaced",
+            "Design improvements"
+          ],
+          "matchScore": 15,
+          "matchReasons": [
+            "Discovery findings align with: \"confusing checkout flow\"",
+            "Discovery findings align with: \"no usability testing\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        }
+      ],
+      "coaching": [
+        {
+          "name": "Coaching Plan",
+          "category": "Coaching - Assessment",
+          "description": "Gap analysis and development plan. What skills does team need? What coaching approach?",
+          "whenToUse": "Start of coaching engagement. Identify skill gaps and create development roadmap.",
+          "timeCommitment": "1-2 weeks assessment, ongoing coaching",
+          "resourcesNeeded": ["Coach", "team time for assessment"],
+          "teamMaturity": ["beginner", "intermediate"],
+          "outcomes": [
+            "Clear skill gaps identified",
+            "Development plan",
+            "Prioritized coaching focus",
+            "Progress tracking"
+          ],
+          "matchScore": 35,
+          "matchReasons": [
+            "Detected: \"development\"",
+            "Discovery findings align with: \"skill gaps\"",
+            "Discovery findings align with: \"needs development\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Coaching Time Management",
+          "category": "Coaching - Applied",
+          "description": "Help team make time for discovery. Address 'too busy' objection. Discovery is part of work, not extra.",
+          "whenToUse": "When team says 'no time for discovery.' Shift from reactive to proactive.",
+          "timeCommitment": "Ongoing coaching discussions",
+          "resourcesNeeded": ["Coach", "team calendar review"],
+          "teamMaturity": ["beginner", "intermediate"],
+          "outcomes": [
+            "Discovery time protected",
+            "Reactive work reduced",
+            "Sustainable practice",
+            "Team capacity clarity"
+          ],
+          "matchScore": 30,
+          "matchReasons": [
+            "Detected: \"no time\"",
+            "Discovery findings align with: \"no time for discovery\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Team Objectives - Empowerment",
+          "category": "Coaching - Team Objectives",
+          "description": "Coach team to work from objectives not feature lists. Shift from feature factory to empowered team.",
+          "whenToUse": "When team operates as feature factory. Transition to outcome-focused work.",
+          "timeCommitment": "Ongoing coaching, 2-4 weeks initial transition",
+          "resourcesNeeded": ["Coach", "leadership buy-in"],
+          "teamMaturity": ["beginner", "intermediate"],
+          "outcomes": [
+            "Team empowerment",
+            "Objective-driven work",
+            "Reduced feature factory behavior",
+            "Strategic alignment"
+          ],
+          "matchScore": 30,
+          "matchReasons": [
+            "Detected: \"objectives\"",
+            "Detected: \"feature factory\"",
+            "Discovery findings align with: \"loss of autonomy\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Coaching Decisions",
+          "category": "Coaching - Applied",
+          "description": "Guide team's decision-making process. Help teams make evidence-based decisions confidently.",
+          "whenToUse": "When team struggles with decisions or defers to HiPPO. Build decision-making capability.",
+          "timeCommitment": "Ongoing coaching at decision points",
+          "resourcesNeeded": ["Coach"],
+          "teamMaturity": ["beginner", "intermediate"],
+          "outcomes": [
+            "Better decisions",
+            "Team confidence",
+            "Evidence-based approach",
+            "Reduced decision paralysis"
+          ],
+          "matchScore": 25,
+          "matchReasons": [
+            "Detected: \"decisions\"",
+            "Detected: \"decision-making\"",
+            "Discovery findings align with: \"unclear decision-making authority\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        },
+        {
+          "name": "Coaching Product Discovery",
+          "category": "Coaching - Applied",
+          "description": "Guide team through discovery practices. Build discovery muscle through doing.",
+          "whenToUse": "When team is new to discovery. Learn by doing with coach support.",
+          "timeCommitment": "Weekly coaching sessions, ongoing",
+          "resourcesNeeded": ["Coach", "team participation"],
+          "teamMaturity": ["beginner"],
+          "outcomes": [
+            "Discovery skills developed",
+            "Hands-on practice",
+            "Confidence building",
+            "Sustainable habits"
+          ],
+          "matchScore": 20,
+          "matchReasons": [
+            "Discovery findings align with: \"new to discovery\"",
+            "Discovery findings align with: \"build discovery muscle\""
+          ],
+          "svpgSource": "SVPG Masterclass 2025"
+        }
+      ]
+    }
+  }
+}

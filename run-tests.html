@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LEA Regression Test Runner</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .test-output {
+            white-space: pre-wrap;
+            background: #252526;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #3e3e42;
+        }
+        .pass { color: #4ec9b0; }
+        .fail { color: #f48771; }
+        h1 { color: #4ec9b0; }
+    </style>
+</head>
+<body>
+    <h1>LEA Regression Test Runner</h1>
+    <div id="testOutput" class="test-output">Loading tests...</div>
+
+    <script>
+        // Load and run tests from the main application
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = 'index.html';
+        document.body.appendChild(iframe);
+
+        iframe.onload = function() {
+            try {
+                const output = document.getElementById('testOutput');
+                output.innerHTML = '═══════════════════════════════════════\n';
+                output.innerHTML += '  LEA REGRESSION TEST SUITE\n';
+                output.innerHTML += '═══════════════════════════════════════\n\n';
+
+                // Access the test framework from the iframe
+                const iframeWindow = iframe.contentWindow;
+                const testFramework = iframeWindow.testFramework;
+
+                if (!testFramework) {
+                    output.innerHTML += '<span class="fail">❌ ERROR: testFramework not found in index.html</span>\n';
+                    return;
+                }
+
+                // Capture console output
+                const results = [];
+                const originalLog = console.log;
+                const originalError = console.error;
+
+                console.log = function(...args) {
+                    const msg = args.join(' ');
+                    results.push(msg);
+                    originalLog.apply(console, args);
+                };
+
+                console.error = function(...args) {
+                    const msg = args.join(' ');
+                    results.push(msg);
+                    originalError.apply(console, args);
+                };
+
+                // Run all tests
+                testFramework.runAll();
+
+                // Restore console
+                console.log = originalLog;
+                console.error = originalError;
+
+                // Display results
+                setTimeout(() => {
+                    if (results.length === 0) {
+                        output.innerHTML += '<span class="fail">❌ No test output captured</span>\n';
+                    } else {
+                        results.forEach(line => {
+                            if (line.includes('✓') || line.includes('PASS')) {
+                                output.innerHTML += `<span class="pass">${line}</span>\n`;
+                            } else if (line.includes('✗') || line.includes('FAIL')) {
+                                output.innerHTML += `<span class="fail">${line}</span>\n`;
+                            } else {
+                                output.innerHTML += `${line}\n`;
+                            }
+                        });
+                    }
+
+                    output.innerHTML += '\n═══════════════════════════════════════\n';
+                    output.innerHTML += `Tests completed at ${new Date().toLocaleString()}\n`;
+                }, 1000);
+
+            } catch (error) {
+                document.getElementById('testOutput').innerHTML +=
+                    `<span class="fail">❌ ERROR: ${error.message}</span>\n`;
+                console.error('Test runner error:', error);
+            }
+        };
+
+        iframe.onerror = function(error) {
+            document.getElementById('testOutput').innerHTML =
+                `<span class="fail">❌ Failed to load index.html: ${error}</span>\n`;
+        };
+    </script>
+</body>
+</html>

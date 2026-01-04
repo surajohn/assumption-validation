@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery Verification System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f9d423 0%, #ff9800 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #f9d423 0%, #ff9800 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        h2 {
+            color: #f9a825;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #f9a825;
+        }
+
+        textarea:disabled {
+            background: #f5f5f5;
+            color: #666;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+
+
+        button {
+            background: linear-gradient(135deg, #f9d423 0%, #ff9800 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(249, 168, 37, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+
+        /* Engagement Metadata */
+        .engagement-metadata {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 5px;
+        }
+
+        .mode-badge {
+            font-weight: 700;
+            font-size: 1.1em;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-badge.edit-mode {
+            background: #4caf50;
+            color: white;
+        }
+
+        .mode-badge.view-mode {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-mode-toggle {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid #ddd;
+            font-family: inherit;
+            font-size: 0.95em;
+            background: white;
+            color: #666;
+        }
+
+        .btn-mode-toggle:hover {
+            border-color: #f9a825;
+            color: #f9a825;
+            transform: translateY(-2px);
+        }
+
+        .engagement-metadata input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .engagement-metadata input:focus {
+            outline: none;
+            border-color: #f9a825;
+        }
+
+        .engagement-metadata input:disabled {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .metadata-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f9d423 0%, #ff9800 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(249, 168, 37, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #ddd;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            border-color: #f9a825;
+            color: #f9a825;
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard */
+        .dashboard-section {
+            background: linear-gradient(135deg, #f9d423 0%, #ff9800 100%);
+            padding: 30px;
+            color: white;
+        }
+
+        .coverage-overview {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .overall-stats {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .stat-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+        }
+
+        .stat-content {
+            text-align: center;
+        }
+
+        .percentage {
+            display: block;
+            font-size: 2em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .stat-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+
+        .stat-row .icon {
+            font-size: 1.3em;
+        }
+
+        .phase-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .phase-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .phase-label {
+            min-width: 220px;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .phase-count {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* Tab Navigation */
+        .tabs-navigation {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #ddd;
+            background: #f8f9fa;
+            padding: 0 30px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 15px 20px;
+            color: #666;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            position: relative;
+            width: auto;
+            font-size: 14px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(249, 168, 37, 0.1);
+            color: #f9a825;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tab-btn.active {
+            color: #f9a825;
+            border-bottom-color: #f9a825;
+            background: white;
+        }
+
+        .tab-badge {
+            display: inline-block;
+            background: #ddd;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .tab-badge.complete {
+            background: #4caf50;
+            color: white;
+        }
+
+        /* Tab Panels */
+        .tabs-content {
+            padding: 30px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+
+        .question-card:hover {
+            border-color: #f9a825;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .question-card[data-status="answered"] {
+            border-left: 5px solid #4caf50;
+        }
+
+        .question-card[data-status="open"] {
+            border-left: 5px solid #ff9800;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: #f9a825;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .question-text {
+            flex: 1;
+            margin: 0;
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-badge.answered {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-badge.open {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Discovery Methods Selector */
+        .methods-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .method-tag {
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            width: auto;
+            font-family: inherit;
+        }
+
+        .method-tag:hover {
+            background: #fff;
+            border-color: #f9a825;
+            transform: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .method-tag.active {
+            background: #f9a825;
+            border-color: #f9a825;
+            color: white;
+        }
+
+        .method-tag:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .method-tag:disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #ddd;
+            background: #f5f5f5;
+        }
+
+        .question-body {
+            margin-top: 20px;
+        }
+
+        .question-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .last-updated {
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .btn-mark-complete {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-mark-complete:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-mark-complete:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #9e9e9e;
+        }
+
+        .btn-mark-complete:disabled:hover {
+            transform: none;
+            background: #9e9e9e;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            max-width: 900px;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .summary-content {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            min-height: 200px;
+        }
+
+        .summary-section {
+            margin-bottom: 30px;
+        }
+
+        .summary-section h3 {
+            color: #f9a825;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .summary-section h4 {
+            color: #333;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .summary-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary-section li {
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #f9a825;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .gaps-list li {
+            border-left-color: #ff9800;
+        }
+
+        .methods-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .method-stat {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #eee;
+        }
+
+        .method-stat.used {
+            border-color: #4caf50;
+        }
+
+        .method-icon {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .method-label {
+            display: block;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .method-count {
+            display: block;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #f9a825;
+        }
+
+        .phase-insight {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .phase-insight h5 {
+            color: #f9a825;
+            margin-bottom: 10px;
+        }
+
+        .phase-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .phase-progress .progress-bar {
+            background: #eee;
+        }
+
+        .phase-progress .progress-fill {
+            background: #4caf50;
+        }
+
+        /* Technique Recommendations */
+        .techniques-recommendations {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .technique-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #eee;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .technique-card:hover {
+            border-color: #f9a825;
+            box-shadow: 0 4px 12px rgba(249, 168, 37, 0.15);
+        }
+
+        .technique-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .technique-header h4 {
+            margin: 0;
+            color: #333;
+            font-size: 1.2em;
+            flex: 1;
+        }
+
+        .technique-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        .technique-badge.discovery {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .technique-badge.strategy {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .technique-badge.validation {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .technique-badge.collaboration {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .technique-badge.process {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .technique-badge.planning {
+            background: #e0f2f1;
+            color: #00796b;
+        }
+
+        .technique-badge.team {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .technique-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .technique-match-reasons {
+            background: #fffbf0;
+            border-left: 4px solid #f9a825;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .technique-match-reasons strong {
+            color: #f9a825;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .technique-match-reasons ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: disc;
+        }
+
+        .technique-match-reasons li {
+            padding: 4px 0;
+            background: none;
+            border: none;
+            margin: 0;
+            color: #555;
+        }
+
+        .technique-meta {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .meta-item {
+            margin-bottom: 10px;
+        }
+
+        .meta-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #666;
+            display: inline-block;
+            min-width: 140px;
+        }
+
+        .meta-value {
+            color: #333;
+        }
+
+        .technique-outcomes {
+            margin-top: 15px;
+        }
+
+        .technique-outcomes strong {
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .technique-outcomes ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: disc;
+        }
+
+        .technique-outcomes li {
+            padding: 4px 0;
+            background: none;
+            border: none;
+            margin: 0;
+            color: #555;
+        }
+
+        .summary-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Notifications */
+        #notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+
+        .notification.info {
+            border-left: 4px solid #2196f3;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .coverage-overview {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .overall-stats {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tabs-navigation {
+                padding: 0 15px;
+            }
+
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 0.85em;
+            }
+
+            .tabs-content {
+                padding: 15px;
+            }
+
+            .engagement-metadata {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .metadata-actions {
+                width: 100%;
+            }
+
+            .metadata-actions button {
+                flex: 1;
+            }
+
+            .phase-label {
+                min-width: 100px;
+                font-size: 0.85em;
+            }
+
+            .question-header {
+                flex-wrap: wrap;
+            }
+
+            .summary-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .technique-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .technique-badge {
+                align-self: flex-start;
+            }
+
+            .meta-label {
+                min-width: auto;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Discovery Verification System</h1>
+            <p>SVPG Coaching Discovery Tracker</p>
+        </header>
+
+        <!-- Engagement Metadata -->
+        <div class="engagement-metadata">
+            <div class="mode-indicator">
+                <span class="mode-badge" id="modeBadge">✏️ Edit Mode</span>
+                <button id="toggleModeBtn" class="btn-mode-toggle">👁️ Switch to View Mode</button>
+            </div>
+            <input id="clientName" type="text" placeholder="Client Name">
+            <input id="engagementDate" type="date">
+            <input id="coachName" type="text" placeholder="Coach Name">
+            <div class="metadata-actions">
+                <button id="newEngagement" class="btn-secondary">New Engagement</button>
+                <button id="importBtn" class="btn-secondary">📥 Import</button>
+                <button id="exportBtn" class="btn-primary">📤 Export</button>
+            </div>
+        </div>
+
+        <!-- Coverage Dashboard -->
+        <div class="dashboard-section">
+            <div class="coverage-overview">
+                <div class="overall-stats">
+                    <div class="stat-circle">
+                        <div class="stat-content">
+                            <span class="percentage">0%</span>
+                            <span class="label">Complete</span>
+                        </div>
+                    </div>
+                    <div class="stat-details">
+                        <div class="stat-row">
+                            <span class="icon">✓</span>
+                            <span class="stat-value">0/21</span>
+                            <span class="stat-label">Answered</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="icon">○</span>
+                            <span class="open-count">21</span>
+                            <span class="stat-label">Open</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-breakdown">
+                    <div class="phase-bar" data-phase="1">
+                        <span class="phase-label">Phase 1: Foundation & Context</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="phase-count">0/4</span>
+                    </div>
+                    <div class="phase-bar" data-phase="2">
+                        <span class="phase-label">Phase 2: Success & Outcomes</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="phase-count">0/4</span>
+                    </div>
+                    <div class="phase-bar" data-phase="3">
+                        <span class="phase-label">Phase 3: Structure & Ownership</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="phase-count">0/4</span>
+                    </div>
+                    <div class="phase-bar" data-phase="4">
+                        <span class="phase-label">Phase 4: Team Dynamics & Constraints</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="phase-count">0/8</span>
+                    </div>
+                    <div class="phase-bar" data-phase="5">
+                        <span class="phase-label">Phase 5: Untested Assumptions</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="phase-count">0/1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <nav class="tabs-navigation">
+            <button class="tab-btn active" data-phase="1">Phase 1: Foundation<span class="tab-badge">0/4</span></button>
+            <button class="tab-btn" data-phase="2">Phase 2: Success<span class="tab-badge">0/4</span></button>
+            <button class="tab-btn" data-phase="3">Phase 3: Structure<span class="tab-badge">0/4</span></button>
+            <button class="tab-btn" data-phase="4">Phase 4: Dynamics<span class="tab-badge">0/8</span></button>
+            <button class="tab-btn" data-phase="5">Phase 5: Assumptions<span class="tab-badge">0/1</span></button>
+            <button class="tab-btn" data-phase="summary">Summary</button>
+        </nav>
+
+        <!-- Tab Panels -->
+        <div class="tabs-content">
+            <div class="tab-panel active" data-phase="1"></div>
+            <div class="tab-panel" data-phase="2"></div>
+            <div class="tab-panel" data-phase="3"></div>
+            <div class="tab-panel" data-phase="4"></div>
+            <div class="tab-panel" data-phase="5"></div>
+            <div class="tab-panel" data-phase="summary">
+                <div class="summary-panel">
+                    <div class="summary-header">
+                        <h2>Leadership Summary</h2>
+                        <button id="generateSummary" class="btn-primary">Generate Summary</button>
+                    </div>
+                    <div id="summaryContent" class="summary-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden file input for JSON import -->
+        <input type="file" id="importInput" accept=".json" style="display:none">
+
+        <!-- Notifications container -->
+        <div id="notifications"></div>
+    </div>
+
+    <script>
+        'use strict';
+
+
+        // Discovery Questions Data
+        const discoveryQuestions = {
+            phase1: {
+                name: "Foundation & Context",
+                questions: [
+                    { id: "q1", text: "Why does this product exist?" },
+                    { id: "q2", text: "Who actually experiences the problem we are solving?" },
+                    { id: "q3", text: "How do we know this problem is worth solving now?" },
+                    { id: "q4", text: "What decision are we trying to enable or change?" }
+                ]
+            },
+            phase2: {
+                name: "Success & Outcomes",
+                questions: [
+                    { id: "q5", text: "What would good look like three months from now?" },
+                    { id: "q6", text: "What success would look like in a (insert time period)?" },
+                    { id: "q7", text: "How will we know this worked?" },
+                    { id: "q8", text: "The team's relationship with metrics" }
+                ]
+            },
+            phase3: {
+                name: "Structure & Ownership",
+                questions: [
+                    { id: "q9", text: "Where product ownership actually lives today?" },
+                    { id: "q10", text: "Role clarity across PO, PMs, and engineers" },
+                    { id: "q11", text: "Who decides when priorities collide?" },
+                    { id: "q12", text: "How intentional the backlog really is?" }
+                ]
+            },
+            phase4: {
+                name: "Team Dynamics & Constraints",
+                questions: [
+                    { id: "q13", text: "The team's and leadership's appetite for challenge vs safety" },
+                    { id: "q14", text: "How much autonomy the team believes they have?" },
+                    { id: "q15", text: "How the team currently defines value" },
+                    { id: "q16", text: "Team's past failures or trauma (did a big project fail?)" },
+                    { id: "q17", text: "Hidden stakeholders who actually control decisions" },
+                    { id: "q18", text: "Budget or resource constraints that nobody talks about" },
+                    { id: "q19", text: "Technical debt or system constraints limiting autonomy" },
+                    { id: "q20", text: "Geographic or org structure issues (distributed teams, cross functional friction)" }
+                ]
+            },
+            phase5: {
+                name: "Untested Assumptions",
+                questions: [
+                    { id: "q21", text: "What assumptions are we making that we have not tested?" }
+                ]
+            }
+        };
+
+        // Discovery Methods
+        const discoveryMethods = [
+            { id: "interview", label: "Interview", icon: "🗣️" },
+            { id: "workshop", label: "Workshop", icon: "👥" },
+            { id: "observation", label: "Observation", icon: "👀" },
+            { id: "document_review", label: "Document Review", icon: "📄" },
+            { id: "survey", label: "Survey", icon: "📊" },
+            { id: "data_analysis", label: "Data Analysis", icon: "📈" }
+        ];
+
+        // SVPG Techniques Data (for recommendations)
+        const techniquesData = [{"id":"opportunity-assessment","name":"Opportunity Assessment","category":"Discovery","description":"Structured framework to evaluate product opportunities before committing to solutions","when_to_use":"When team needs to decide which opportunities to pursue or validate business viability","situations":["Too many ideas, unclear which to pursue","Need to align stakeholders on opportunity value","Team jumping to solutions without understanding problem","Leadership asking for business case"],"challenges_addressed":["lack_of_focus","unclear_priorities","stakeholder_alignment","premature_solutions"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"1-2 weeks","participants":["product_manager","designer","tech_lead","stakeholders"],"outcomes":["Clear understanding of business opportunity","Alignment on success metrics","Risk identification","Go/no-go decision framework"]},{"id":"customer-discovery","name":"Customer Discovery Program","category":"Discovery","description":"Continuous qualitative research to deeply understand customer problems and context","when_to_use":"When team lacks deep customer understanding or is building based on assumptions","situations":["Building features customers don't use","Poor product-market fit","Team relying on secondhand customer insights","High churn or low adoption"],"challenges_addressed":["lack_of_customer_insight","assumptions_not_validated","poor_adoption","building_wrong_things"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"Ongoing (weekly sessions)","participants":["product_manager","designer","engineers"],"outcomes":["Deep customer empathy","Validated problem understanding","Opportunity identification","Reduced waste on wrong features"]},{"id":"story-mapping","name":"Story Mapping","category":"Planning","description":"Visual technique to understand user journey and prioritize features in context","when_to_use":"When planning new product or major feature, need shared understanding of scope","situations":["Team unclear on user flow or journey","Need to identify MVP vs future releases","Stakeholders want everything at once","Handoffs causing confusion"],"challenges_addressed":["unclear_scope","poor_prioritization","communication_gaps","mvp_definition"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"4-8 hours workshop","participants":["product_manager","designer","engineers","stakeholders"],"outcomes":["Shared understanding of user journey","Clear MVP definition","Release planning alignment","Feature dependencies visible"]},{"id":"team-objectives","name":"Team Objectives (OKRs)","category":"Strategy","description":"Outcome-based goals that focus team on business results rather than output","when_to_use":"When team is output-focused, needs autonomy, or lacks strategic direction","situations":["Team measured on features shipped not outcomes","Leadership micromanaging solutions","Unclear what success looks like","Team lacks motivation or purpose"],"challenges_addressed":["output_vs_outcome","lack_of_autonomy","unclear_success_metrics","team_motivation"],"team_maturity":["intermediate","advanced"],"time_commitment":"Quarterly planning + ongoing tracking","participants":["product_manager","tech_lead","designer","team"],"outcomes":["Clear outcome-based goals","Team autonomy in solutions","Measurable success criteria","Strategic alignment"]},{"id":"prototype-testing","name":"Prototype Testing","category":"Validation","description":"Test ideas with customers using prototypes before building production code","when_to_use":"When need to validate solution direction before significant engineering investment","situations":["High uncertainty about right solution","Want to test multiple approaches","Need to reduce engineering waste","Stakeholders want proof concept works"],"challenges_addressed":["solution_uncertainty","engineering_waste","stakeholder_buy_in","risk_reduction"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"1-2 weeks per iteration","participants":["designer","product_manager","customers"],"outcomes":["Validated solution direction","Reduced engineering risk","Customer feedback incorporated","Stakeholder confidence"]},{"id":"reference-customers","name":"Reference Customer Program","category":"Discovery","description":"Work closely with 6-8 customers to co-develop and validate solutions","when_to_use":"When building new product or major feature, need deep partnership with customers","situations":["Building something new with high uncertainty","Need early adopters for feedback","Want customer commitment before launch","Complex B2B product requiring validation"],"challenges_addressed":["high_uncertainty","need_early_adopters","validation_required","b2b_complexity"],"team_maturity":["intermediate","advanced"],"time_commitment":"2-6 months","participants":["product_manager","designer","engineers","customers"],"outcomes":["Deep solution validation","Committed early customers","Case studies and testimonials","Product-market fit validation"]},{"id":"product-vision","name":"Product Vision and Strategy","category":"Strategy","description":"Compelling vision of future state and strategy to get there","when_to_use":"When team lacks direction, stakeholders misaligned, or starting new product","situations":["Team unclear on long-term direction","Stakeholders pulling in different directions","Hard to make prioritization decisions","New product or major pivot"],"challenges_addressed":["lack_of_direction","stakeholder_misalignment","prioritization_challenges","new_product_launch"],"team_maturity":["intermediate","advanced"],"time_commitment":"2-4 weeks","participants":["product_leader","stakeholders","team"],"outcomes":["Clear 2-5 year vision","Strategic pillars defined","Decision-making framework","Stakeholder alignment"]},{"id":"product-discovery","name":"Continuous Product Discovery","category":"Discovery","description":"Weekly cadence of prototyping and testing to continuously validate ideas","when_to_use":"When need to establish ongoing validation discipline in product development","situations":["Too many features fail post-launch","Team wants to move faster with confidence","Need to build validation muscle","Waterfall-style planning not working"],"challenges_addressed":["post_launch_failures","slow_learning","validation_gaps","waterfall_legacy"],"team_maturity":["intermediate","advanced"],"time_commitment":"Ongoing (weekly)","participants":["product_manager","designer","engineers"],"outcomes":["Continuous learning and validation","Reduced feature failure rate","Faster iteration cycles","Team confidence in decisions"]},{"id":"empowered-product-teams","name":"Empowered Product Team Model","category":"Team Structure","description":"Cross-functional teams with autonomy to solve problems vs implement features","when_to_use":"When transforming from feature teams to empowered product teams","situations":["Teams are order-takers implementing roadmaps","Lack of innovation or ownership","Slow decision-making due to approvals","Want to scale product organization"],"challenges_addressed":["feature_factory","lack_of_ownership","slow_decisions","scaling_challenges"],"team_maturity":["advanced"],"time_commitment":"3-6 months transformation","participants":["leadership","product_managers","teams"],"outcomes":["Autonomous problem-solving teams","Faster innovation","Better business outcomes","Scalable team structure"]},{"id":"stakeholder-management","name":"Stakeholder Collaboration Framework","category":"Collaboration","description":"Structured approach to engage stakeholders as partners not gatekeepers","when_to_use":"When stakeholder relationships are dysfunctional or blocking progress","situations":["Stakeholders acting as gatekeepers","Constant interruptions and fire drills","Lack of trust from leadership","Politics blocking good decisions"],"challenges_addressed":["stakeholder_dysfunction","lack_of_trust","political_blockers","interruption_culture"],"team_maturity":["intermediate","advanced"],"time_commitment":"Ongoing practice","participants":["product_manager","stakeholders"],"outcomes":["Trusted partnerships","Proactive communication","Reduced fire drills","Better decision-making"]},{"id":"product-strategy","name":"Product Strategy Framework","category":"Strategy","description":"Focus areas and insights that guide product decisions toward vision","when_to_use":"When team has vision but unclear how to prioritize or make tactical decisions","situations":["Vision exists but execution unclear","Conflicting priorities across teams","Reactive decision-making","Strategy is just a roadmap"],"challenges_addressed":["execution_gaps","conflicting_priorities","reactive_mode","roadmap_confusion"],"team_maturity":["intermediate","advanced"],"time_commitment":"2-3 weeks per strategy cycle","participants":["product_leader","product_managers","stakeholders"],"outcomes":["Clear focus areas","Actionable insights","Prioritization framework","Strategic coherence"]},{"id":"dual-track-agile","name":"Dual-Track Agile","category":"Process","description":"Parallel discovery and delivery tracks to validate before building","when_to_use":"When need to integrate discovery into existing agile development process","situations":["Discovery and delivery are sequential","Sprint planning lacks validated ideas","Team wants agile but with validation","Gap between design and engineering"],"challenges_addressed":["sequential_workflow","unvalidated_backlogs","design_engineering_gap","agile_integration"],"team_maturity":["intermediate","advanced"],"time_commitment":"Ongoing process change","participants":["product_manager","designer","engineers","scrum_master"],"outcomes":["Validated backlog","Reduced delivery risk","Better design-eng collaboration","Sustainable pace"]},{"id":"four-risks-assessment","name":"Four Risks Assessment","category":"Validation","description":"Evaluate value, usability, feasibility, and viability risks before committing to build","when_to_use":"When assessing new features or products to identify and mitigate key risks","situations":["Need to validate if idea is worth building","Stakeholders asking for risk assessment","Want to prioritize which risks to address first","Making build vs buy vs partner decisions"],"challenges_addressed":["high_uncertainty","risk_reduction","stakeholder_buy_in","validation_required"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"1-2 weeks","participants":["product_manager","designer","tech_lead","stakeholders"],"outcomes":["Clear understanding of key risks","Prioritized risk mitigation plan","Go/no-go decision criteria","Stakeholder alignment on risks"]},{"id":"customer-interviews","name":"Customer Interview Program","category":"Discovery","description":"Structured one-on-one conversations to understand customer problems, context, and needs","when_to_use":"When need deep qualitative insights into customer problems and behaviors","situations":["Don't understand why customers behave certain way","Need to uncover hidden problems","Want to validate problem hypotheses","Building empathy with target users"],"challenges_addressed":["lack_of_customer_insight","assumptions_not_validated","building_wrong_things","poor_adoption"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"Ongoing (weekly)","participants":["product_manager","designer"],"outcomes":["Deep problem understanding","Customer pain points identified","Opportunity insights","Validated assumptions"]},{"id":"value-testing","name":"Value Testing","category":"Validation","description":"Test if customers find the solution valuable enough to use or buy","when_to_use":"When need to validate customer willingness to adopt or pay for solution","situations":["Uncertain if customers will use the feature","Need to validate pricing or business model","Want to test value proposition","Low engagement or conversion rates"],"challenges_addressed":["solution_uncertainty","poor_adoption","validation_required","stakeholder_buy_in"],"team_maturity":["intermediate","advanced"],"time_commitment":"1-3 weeks","participants":["product_manager","designer","customers"],"outcomes":["Validated value proposition","Customer willingness to pay","Adoption predictions","Refined positioning"]},{"id":"usability-testing","name":"Usability Testing","category":"Validation","description":"Observe customers using product to identify usability issues and friction points","when_to_use":"When need to validate that customers can successfully use the solution","situations":["Users struggling to complete tasks","High support tickets or confusion","Want to test new designs before building","Poor onboarding or activation rates"],"challenges_addressed":["poor_adoption","solution_uncertainty","engineering_waste","validation_required"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"3-5 days per round","participants":["designer","product_manager","customers"],"outcomes":["Identified usability issues","Task completion validation","Design improvements prioritized","Reduced customer friction"]},{"id":"ab-testing","name":"A/B Testing & Experimentation","category":"Validation","description":"Run controlled experiments to validate hypotheses and measure impact","when_to_use":"When have live product and want to test changes with real users at scale","situations":["Need to measure impact of changes","Want to optimize conversion or engagement","Competing hypotheses about best approach","Need data-driven decision making"],"challenges_addressed":["assumptions_not_validated","slow_learning","post_launch_failures","stakeholder_buy_in"],"team_maturity":["intermediate","advanced"],"time_commitment":"2-4 weeks per experiment","participants":["product_manager","engineers","data_analyst"],"outcomes":["Validated hypotheses with data","Measured feature impact","Optimized conversion rates","Evidence-based decisions"]},{"id":"discovery-sprint","name":"Discovery Sprint","category":"Discovery","description":"Time-boxed sprint to rapidly explore and validate problem space","when_to_use":"When need to quickly explore new opportunity or validate direction","situations":["New opportunity to explore quickly","Need to validate direction before committing","Deadline pressure for decision","Want focused discovery effort"],"challenges_addressed":["high_uncertainty","validation_required","slow_learning","need_early_adopters"],"team_maturity":["intermediate","advanced"],"time_commitment":"1-2 weeks","participants":["product_manager","designer","tech_lead"],"outcomes":["Rapid problem validation","Solution direction clarity","Risk identification","Prototype for testing"]},{"id":"product-council","name":"Product Council","category":"Collaboration","description":"Regular forum for product leaders to review progress and make strategic decisions","when_to_use":"When need to coordinate multiple product teams and make portfolio decisions","situations":["Multiple teams with dependencies","Need strategic alignment across products","Portfolio prioritization challenges","Scaling product organization"],"challenges_addressed":["conflicting_priorities","stakeholder_alignment","scaling_challenges","execution_gaps"],"team_maturity":["advanced"],"time_commitment":"Weekly or bi-weekly meetings","participants":["product_leaders","stakeholders"],"outcomes":["Strategic alignment","Clear priorities across teams","Coordinated decision-making","Portfolio optimization"]},{"id":"customer-journey-mapping","name":"Customer Journey Mapping","category":"Discovery","description":"Visualize end-to-end customer experience to identify pain points and opportunities","when_to_use":"When need to understand holistic customer experience across touchpoints","situations":["Customers dropping off at certain stages","Need to improve end-to-end experience","Siloed teams working on different parts","Want to identify biggest pain points"],"challenges_addressed":["lack_of_customer_insight","poor_adoption","unclear_scope","communication_gaps"],"team_maturity":["beginner","intermediate","advanced"],"time_commitment":"1-2 weeks","participants":["product_manager","designer","stakeholders"],"outcomes":["Visualized customer experience","Pain points identified","Opportunity areas mapped","Shared understanding of journey"]},{"id":"product-analytics","name":"Product Analytics & Metrics","category":"Validation","description":"Instrument product to measure behavior and track key metrics","when_to_use":"When need quantitative data to understand usage and measure success","situations":["Flying blind without usage data","Need to measure feature adoption","Want to track product health","Can't prove impact of changes"],"challenges_addressed":["assumptions_not_validated","unclear_success_metrics","slow_learning","stakeholder_buy_in"],"team_maturity":["intermediate","advanced"],"time_commitment":"Initial setup 2-3 weeks, ongoing","participants":["product_manager","engineers","data_analyst"],"outcomes":["Data-driven insights","Measurable success metrics","Usage patterns understood","Evidence of impact"]},{"id":"feasibility-prototyping","name":"Feasibility Prototyping","category":"Validation","description":"Build technical spikes to validate technical feasibility and approach","when_to_use":"When technical uncertainty about implementation approach or complexity","situations":["Uncertain if solution is technically possible","Need to explore different technical approaches","Architecture decisions required","Performance or scalability concerns"],"challenges_addressed":["solution_uncertainty","engineering_waste","risk_reduction","stakeholder_buy_in"],"team_maturity":["intermediate","advanced"],"time_commitment":"3-5 days per spike","participants":["tech_lead","engineers","product_manager"],"outcomes":["Technical feasibility validated","Architecture direction clear","Effort estimates refined","Risk mitigation plan"]},{"id":"business-viability-testing","name":"Business Viability Testing","category":"Validation","description":"Validate business model, pricing, and financial viability of solution","when_to_use":"When need to ensure solution is viable for the business financially","situations":["Uncertain about pricing strategy","Need to validate business model","ROI questions from leadership","Market size or revenue unclear"],"challenges_addressed":["stakeholder_buy_in","validation_required","unclear_success_metrics","new_product_launch"],"team_maturity":["intermediate","advanced"],"time_commitment":"2-4 weeks","participants":["product_manager","business_stakeholders","finance"],"outcomes":["Validated business model","Pricing strategy confirmed","Financial projections","Go-to-market plan"]},{"id":"product-ops","name":"Product Operations","category":"Process","description":"Systems and processes to enable product teams to work effectively at scale","when_to_use":"When product organization growing and needs consistent processes and tools","situations":["Inconsistent processes across teams","Teams reinventing the wheel","Tool sprawl and inefficiency","Onboarding new PMs is difficult"],"challenges_addressed":["scaling_challenges","slow_decisions","communication_gaps","execution_gaps"],"team_maturity":["advanced"],"time_commitment":"Ongoing capability building","participants":["product_operations","product_leaders"],"outcomes":["Standardized processes","Efficient tooling","Better team enablement","Scalable operations"]}];
+
+        // Global state
+        let stateManager, tabNavigator, dataManager, summaryGenerator, viewModeManager;
+
+        // Tab Navigator Class
+        class TabNavigator {
+            constructor() {
+                this.activeTab = "1";
+                this.setupEventListeners();
+                this.initializeFromHash();
+            }
+
+            setupEventListeners() {
+                document.querySelector('.tabs-navigation').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tab-btn')) {
+                        const phase = e.target.dataset.phase;
+                        this.switchTab(phase);
+                    }
+                });
+
+                // Handle browser back/forward
+                window.addEventListener('hashchange', () => {
+                    this.initializeFromHash();
+                });
+            }
+
+            switchTab(phaseId) {
+                // Remove active from all
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+                // Add active to selected
+                const activeBtn = document.querySelector(`.tab-btn[data-phase="${phaseId}"]`);
+                const activePanel = document.querySelector(`.tab-panel[data-phase="${phaseId}"]`);
+
+                if (activeBtn && activePanel) {
+                    activeBtn.classList.add('active');
+                    activePanel.classList.add('active');
+                    this.activeTab = phaseId;
+                    window.location.hash = `phase-${phaseId}`;
+                }
+            }
+
+            initializeFromHash() {
+                if (window.location.hash) {
+                    const phase = window.location.hash.replace('#phase-', '');
+                    this.switchTab(phase);
+                }
+            }
+        }
+
+        // Question State Manager Class
+        class QuestionStateManager {
+            constructor() {
+                this.state = this.initializeState();
+                this.setupEventListeners();
+                this.renderAllQuestions();
+                this.updateProgress();
+            }
+
+            initializeState() {
+                const today = new Date().toISOString().split('T')[0];
+                const state = {
+                    metadata: {
+                        clientName: "",
+                        engagementDate: today,
+                        coach: "",
+                        lastModified: ""
+                    },
+                    questions: {}
+                };
+
+                // Initialize all 21 questions
+                Object.keys(discoveryQuestions).forEach(phaseKey => {
+                    const phase = discoveryQuestions[phaseKey];
+                    const phaseNum = parseInt(phaseKey.replace('phase', ''));
+
+                    phase.questions.forEach(q => {
+                        state.questions[q.id] = {
+                            questionId: q.id,
+                            phase: phaseNum,
+                            text: q.text,
+                            findings: "",
+                            status: "open",
+                            discoveryMethods: [],
+                            notes: "",
+                            lastUpdated: ""
+                        };
+                    });
+                });
+
+                return state;
+            }
+
+            setupEventListeners() {
+                // Event delegation for all inputs
+                document.addEventListener('input', (e) => {
+                    if (e.target.matches('.findings-input, .notes-input')) {
+                        const questionCard = e.target.closest('.question-card');
+                        const questionId = questionCard.dataset.questionId;
+                        const field = e.target.dataset.field;
+                        this.updateQuestion(questionId, field, e.target.value);
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (e.target.matches('.method-tag')) {
+                        this.toggleMethod(e.target);
+                    }
+                    if (e.target.matches('.btn-mark-complete')) {
+                        this.toggleQuestionStatus(e.target);
+                    }
+                });
+
+                // Metadata listeners
+                ['clientName', 'engagementDate', 'coachName'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.addEventListener('input', (e) => {
+                            const key = id === 'coachName' ? 'coach' : id;
+                            this.state.metadata[key] = e.target.value;
+                        });
+                    }
+                });
+            }
+
+            updateQuestion(questionId, field, value) {
+                if (!this.state.questions[questionId]) return;
+
+                this.state.questions[questionId][field] = value;
+                this.state.questions[questionId].lastUpdated = new Date().toISOString();
+
+                // Auto-update status based on findings
+                if (field === 'findings') {
+                    const newStatus = value.trim().length > 0 ? 'answered' : 'open';
+                    this.state.questions[questionId].status = newStatus;
+                    this.updateQuestionCardStatus(questionId, newStatus);
+                }
+
+                this.updateProgress();
+            }
+
+            toggleMethod(methodTag) {
+                methodTag.classList.toggle('active');
+
+                const questionCard = methodTag.closest('.question-card');
+                const questionId = questionCard.dataset.questionId;
+                const method = methodTag.dataset.method;
+
+                const methods = this.state.questions[questionId].discoveryMethods;
+                const index = methods.indexOf(method);
+
+                if (index > -1) {
+                    methods.splice(index, 1);
+                } else {
+                    methods.push(method);
+                }
+            }
+
+            toggleQuestionStatus(button) {
+                const questionCard = button.closest('.question-card');
+                const questionId = questionCard.dataset.questionId;
+                const currentStatus = this.state.questions[questionId].status;
+
+                const newStatus = currentStatus === 'open' ? 'answered' : 'open';
+                this.state.questions[questionId].status = newStatus;
+
+                this.updateQuestionCardStatus(questionId, newStatus);
+                this.updateProgress();
+            }
+
+            updateQuestionCardStatus(questionId, status) {
+                const card = document.querySelector(`[data-question-id="${questionId}"]`);
+                if (!card) return;
+
+                card.dataset.status = status;
+
+                const badge = card.querySelector('.status-badge');
+                badge.className = `status-badge ${status}`;
+                badge.textContent = status === 'answered' ? '✓ Answered' : '○ Open';
+
+                const button = card.querySelector('.btn-mark-complete');
+                button.textContent = status === 'answered' ? 'Mark as Open' : 'Mark as Answered';
+            }
+
+            calculateCoverage() {
+                const total = Object.keys(this.state.questions).length;
+                const answered = Object.values(this.state.questions).filter(q => q.status === 'answered').length;
+
+                const byPhase = {};
+                for (let i = 1; i <= 5; i++) {
+                    const phaseQuestions = Object.values(this.state.questions).filter(q => q.phase === i);
+                    const phaseAnswered = phaseQuestions.filter(q => q.status === 'answered').length;
+                    byPhase[i] = {
+                        total: phaseQuestions.length,
+                        answered: phaseAnswered,
+                        percentage: phaseQuestions.length > 0 ? (phaseAnswered / phaseQuestions.length) * 100 : 0
+                    };
+                }
+
+                return {
+                    overall: (answered / total) * 100,
+                    answeredCount: answered,
+                    totalCount: total,
+                    openCount: total - answered,
+                    byPhase
+                };
+            }
+
+            updateProgress() {
+                const coverage = this.calculateCoverage();
+
+                // Update main stats
+                const percentageEl = document.querySelector('.percentage');
+                const statValueEl = document.querySelector('.stat-value');
+                const openCountEl = document.querySelector('.open-count');
+
+                if (percentageEl) percentageEl.textContent = `${coverage.overall.toFixed(0)}%`;
+                if (statValueEl) statValueEl.textContent = `${coverage.answeredCount}/${coverage.totalCount}`;
+                if (openCountEl) openCountEl.textContent = coverage.openCount;
+
+                // Update phase bars
+                Object.entries(coverage.byPhase).forEach(([phase, data]) => {
+                    const phaseBar = document.querySelector(`.phase-bar[data-phase="${phase}"]`);
+                    if (phaseBar) {
+                        const fill = phaseBar.querySelector('.progress-fill');
+                        const count = phaseBar.querySelector('.phase-count');
+                        if (fill) fill.style.width = `${data.percentage}%`;
+                        if (count) count.textContent = `${data.answered}/${data.total}`;
+                    }
+
+                    // Update tab badges
+                    const tabBtn = document.querySelector(`.tab-btn[data-phase="${phase}"]`);
+                    if (tabBtn) {
+                        const badge = tabBtn.querySelector('.tab-badge');
+                        if (badge) {
+                            badge.textContent = `${data.answered}/${data.total}`;
+                            if (data.percentage === 100) {
+                                badge.classList.add('complete');
+                            } else {
+                                badge.classList.remove('complete');
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderAllQuestions() {
+                Object.keys(discoveryQuestions).forEach(phaseKey => {
+                    const phase = discoveryQuestions[phaseKey];
+                    const phaseNum = parseInt(phaseKey.replace('phase', ''));
+                    const panel = document.querySelector(`.tab-panel[data-phase="${phaseNum}"]`);
+
+                    if (panel && panel.dataset.phase !== 'summary') {
+                        const html = phase.questions.map(q => this.createQuestionCardHTML(q, phaseNum)).join('');
+                        panel.innerHTML = html;
+                    }
+                });
+            }
+
+            createQuestionCardHTML(question, phase) {
+                const qNum = parseInt(question.id.replace('q', ''));
+
+                return `
+                    <div class="question-card" data-question-id="${question.id}" data-status="open">
+                        <div class="question-header">
+                            <span class="question-number">Q${qNum}</span>
+                            <h3 class="question-text">${question.text}</h3>
+                            <span class="status-badge open">○ Open</span>
+                        </div>
+
+                        <div class="question-body">
+                            <div class="form-group">
+                                <label>Findings</label>
+                                <textarea
+                                    class="findings-input"
+                                    data-field="findings"
+                                    rows="6"
+                                    placeholder="What did you discover about this question?"
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Discovery Methods Used</label>
+                                <div class="methods-selector">
+                                    ${discoveryMethods.map(m => `
+                                        <button type="button" class="method-tag" data-method="${m.id}">
+                                            ${m.icon} ${m.label}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Additional Notes</label>
+                                <textarea
+                                    class="notes-input"
+                                    data-field="notes"
+                                    rows="3"
+                                    placeholder="Any additional context or observations..."
+                                ></textarea>
+                            </div>
+
+                            <div class="question-footer">
+                                <span class="last-updated"></span>
+                                <button type="button" class="btn-mark-complete">Mark as Answered</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getState() {
+                return this.state;
+            }
+
+            setState(newState) {
+                this.state = newState;
+                this.renderAllQuestions();
+
+                // Restore form values
+                Object.entries(newState.questions).forEach(([qId, q]) => {
+                    const card = document.querySelector(`[data-question-id="${qId}"]`);
+                    if (!card) return;
+
+                    const findingsInput = card.querySelector('.findings-input');
+                    const notesInput = card.querySelector('.notes-input');
+
+                    if (findingsInput) findingsInput.value = q.findings || '';
+                    if (notesInput) notesInput.value = q.notes || '';
+
+                    // Restore method selections
+                    q.discoveryMethods.forEach(method => {
+                        const methodTag = card.querySelector(`[data-method="${method}"]`);
+                        if (methodTag) methodTag.classList.add('active');
+                    });
+
+                    // Update status
+                    this.updateQuestionCardStatus(qId, q.status);
+                });
+
+                // Restore metadata
+                if (newState.metadata) {
+                    document.getElementById('clientName').value = newState.metadata.clientName || '';
+                    document.getElementById('engagementDate').value = newState.metadata.engagementDate || '';
+                    document.getElementById('coachName').value = newState.metadata.coach || '';
+                }
+
+                this.updateProgress();
+
+                // Re-apply current mode after restoring state
+                if (window.viewModeManager) {
+                    window.viewModeManager.applyMode();
+                }
+            }
+        }
+
+        // Data Manager Class
+        class DataManager {
+            constructor(stateManager) {
+                this.stateManager = stateManager;
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    this.exportToJSON();
+                });
+
+                document.getElementById('importBtn').addEventListener('click', () => {
+                    document.getElementById('importInput').click();
+                });
+
+                document.getElementById('importInput').addEventListener('change', (e) => {
+                    this.importFromJSON(e.target.files[0]);
+                });
+
+                document.getElementById('newEngagement').addEventListener('click', () => {
+                    this.newEngagement();
+                });
+            }
+
+            exportToJSON() {
+                const state = this.stateManager.getState();
+                const coverage = this.stateManager.calculateCoverage();
+
+                // Generate technique recommendations
+                const techniqueRecommender = new TechniqueRecommender();
+                const recommendations = techniqueRecommender.recommendTechniques(state);
+
+                // Extract findings
+                const findings = Object.values(state.questions)
+                    .filter(q => q.status === 'answered' && q.findings.trim())
+                    .map(q => ({
+                        questionId: q.questionId,
+                        phase: q.phase,
+                        question: q.text,
+                        findings: q.findings,
+                        notes: q.notes,
+                        discoveryMethods: q.discoveryMethods,
+                        lastUpdated: q.lastUpdated
+                    }));
+
+                // Identify gaps
+                const gaps = Object.values(state.questions)
+                    .filter(q => q.status === 'open' || !q.findings.trim())
+                    .map(q => ({
+                        questionId: q.questionId,
+                        phase: q.phase,
+                        question: q.text
+                    }));
+
+                // Analyze methods used
+                const methodsUsed = {};
+                discoveryMethods.forEach(m => {
+                    methodsUsed[m.id] = {
+                        label: m.label,
+                        icon: m.icon,
+                        count: 0
+                    };
+                });
+
+                Object.values(state.questions).forEach(q => {
+                    q.discoveryMethods.forEach(method => {
+                        if (methodsUsed[method]) {
+                            methodsUsed[method].count++;
+                        }
+                    });
+                });
+
+                // Phase-by-phase insights
+                const phaseInsights = {};
+                for (let phase = 1; phase <= 5; phase++) {
+                    const phaseQuestions = Object.values(state.questions).filter(q => q.phase === phase);
+                    const answered = phaseQuestions.filter(q => q.status === 'answered');
+
+                    phaseInsights[`phase${phase}`] = {
+                        name: discoveryQuestions[`phase${phase}`].name,
+                        total: phaseQuestions.length,
+                        answered: answered.length,
+                        percentage: phaseQuestions.length > 0 ? (answered.length / phaseQuestions.length) * 100 : 0
+                    };
+                }
+
+                // Build enhanced export data (v2.0)
+                const exportData = {
+                    version: "2.0",
+                    exportDate: new Date().toISOString(),
+                    metadata: state.metadata,
+                    questions: Object.values(state.questions),
+                    analysis: {
+                        coverage: {
+                            totalQuestions: coverage.totalCount,
+                            answeredQuestions: coverage.answeredCount,
+                            completionPercentage: coverage.overall
+                        },
+                        findings: findings,
+                        gaps: gaps,
+                        discoveryMethods: methodsUsed,
+                        phaseInsights: phaseInsights,
+                        recommendedTechniques: recommendations.map(rec => ({
+                            name: rec.technique.name,
+                            category: rec.technique.category,
+                            description: rec.technique.description,
+                            whenToUse: rec.technique.when_to_use,
+                            timeCommitment: rec.technique.time_commitment,
+                            teamMaturity: rec.technique.team_maturity,
+                            outcomes: rec.technique.outcomes,
+                            matchScore: rec.score,
+                            matchReasons: rec.matchReasons
+                        }))
+                    }
+                };
+
+                const jsonString = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = window.URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                const clientName = state.metadata.clientName || 'Unknown';
+                const sanitized = clientName.replace(/[^a-z0-9]/gi, '-').substring(0, 50);
+                const dateStr = new Date().toISOString().split('T')[0];
+                a.download = `Discovery-v2-${sanitized}-${dateStr}.json`;
+
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                this.showNotification('Enhanced discovery data (v2.0) exported successfully', 'success');
+            }
+
+            importFromJSON(file) {
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+
+                        // Validate version (support v1.0 and v2.0)
+                        const version = importedData.version || "1.0";
+                        if (version !== "1.0" && version !== "2.0") {
+                            throw new Error(`Unsupported file version: ${version}`);
+                        }
+
+                        // Reconstruct state
+                        const newState = {
+                            metadata: importedData.metadata || {},
+                            questions: {}
+                        };
+
+                        importedData.questions.forEach(q => {
+                            newState.questions[q.questionId] = q;
+                        });
+
+                        this.stateManager.setState(newState);
+
+                        // Show appropriate notification based on version
+                        const versionInfo = version === "2.0" ? " (v2.0 with analysis)" : "";
+                        this.showNotification(`Discovery data${versionInfo} imported successfully - Switched to View Mode`, 'success');
+
+                        // If v2.0, log analysis data (optional - can be used later)
+                        if (version === "2.0" && importedData.analysis) {
+                            console.log('Imported analysis data:', importedData.analysis);
+                            console.log('Recommended techniques:', importedData.analysis.recommendedTechniques);
+                            // Analysis is available but we regenerate it on demand via Summary tab
+                        }
+
+                        // Switch to view mode after import (safety measure)
+                        if (window.viewModeManager) {
+                            setTimeout(() => {
+                                window.viewModeManager.setMode(true);
+                            }, 100);
+                        }
+
+                    } catch (error) {
+                        console.error('Import error:', error);
+                        this.showNotification('Error importing file: ' + error.message, 'error');
+                    }
+                };
+
+                reader.onerror = () => {
+                    this.showNotification('Error reading file', 'error');
+                };
+
+                reader.readAsText(file);
+                // Reset file input
+                document.getElementById('importInput').value = '';
+            }
+
+            newEngagement() {
+                const hasData = Object.values(this.stateManager.state.questions).some(q =>
+                    q.findings || q.notes || q.discoveryMethods.length > 0
+                );
+
+                if (hasData) {
+                    const confirmed = confirm(
+                        'You have unsaved changes. Do you want to export before starting a new engagement?'
+                    );
+                    if (confirmed) {
+                        this.exportToJSON();
+                        setTimeout(() => this.resetState(), 500);
+                    } else {
+                        this.resetState();
+                    }
+                } else {
+                    this.resetState();
+                }
+            }
+
+            resetState() {
+                this.stateManager.setState(this.stateManager.initializeState());
+                document.querySelector('.tab-btn').click();
+                this.showNotification('New engagement started', 'info');
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+
+                const container = document.getElementById('notifications');
+                container.appendChild(notification);
+
+                setTimeout(() => notification.classList.add('show'), 10);
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        }
+
+        // Technique Recommender Class
+        class TechniqueRecommender {
+            constructor() {
+                // No initialization needed
+            }
+
+            /**
+             * Analyze discovery findings and recommend SVPG techniques
+             * @param {Object} state - The current state with all questions
+             * @returns {Array} - Top 3-5 recommended techniques with reasoning
+             */
+            recommendTechniques(state) {
+                // Extract all findings text
+                const allFindings = this.extractAllFindings(state);
+
+                if (!allFindings || allFindings.trim().length === 0) {
+                    return [];
+                }
+
+                // Score each technique based on how well it matches the findings
+                const scoredTechniques = techniquesData.map(technique => {
+                    let score = 0;
+                    const matchReasons = [];
+
+                    // Analyze findings against technique situations
+                    const situationMatches = this.matchSituations(allFindings, technique.situations);
+                    score += situationMatches.score;
+                    if (situationMatches.reasons.length > 0) {
+                        matchReasons.push(...situationMatches.reasons);
+                    }
+
+                    // Analyze findings against when_to_use
+                    const whenToUseMatch = this.matchWhenToUse(allFindings, technique.when_to_use);
+                    score += whenToUseMatch.score;
+                    if (whenToUseMatch.reason) {
+                        matchReasons.push(whenToUseMatch.reason);
+                    }
+
+                    // Keyword-based scoring
+                    const keywordScore = this.scoreByKeywords(allFindings, technique);
+                    score += keywordScore;
+
+                    return {
+                        technique,
+                        score,
+                        matchReasons: this.deduplicateReasons(matchReasons)
+                    };
+                });
+
+                // Filter out techniques with no matches and sort by score
+                const recommendations = scoredTechniques
+                    .filter(t => t.score > 0)
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, 5); // Top 5 recommendations
+
+                return recommendations;
+            }
+
+            /**
+             * Extract all findings text from answered questions
+             */
+            extractAllFindings(state) {
+                const findings = [];
+
+                Object.values(state.questions).forEach(q => {
+                    if (q.status === 'answered' && q.findings.trim()) {
+                        findings.push(q.findings);
+                    }
+                    if (q.notes && q.notes.trim()) {
+                        findings.push(q.notes);
+                    }
+                });
+
+                return findings.join(' ').toLowerCase();
+            }
+
+            /**
+             * Match findings against technique situations
+             */
+            matchSituations(findings, situations) {
+                let score = 0;
+                const reasons = [];
+
+                situations.forEach(situation => {
+                    const situationLower = situation.toLowerCase();
+
+                    // Check for exact phrase match (high value)
+                    if (findings.includes(situationLower)) {
+                        score += 15;
+                        reasons.push(`Your discovery reveals: "${situation}"`);
+                    } else {
+                        // Check for partial word matches
+                        const situationWords = situationLower.split(/\s+/).filter(w => w.length > 3);
+                        const matchingWords = situationWords.filter(word => findings.includes(word));
+
+                        if (matchingWords.length >= 3) {
+                            score += 8;
+                            reasons.push(`Discovery findings align with: "${situation}"`);
+                        } else if (matchingWords.length >= 2) {
+                            score += 4;
+                        }
+                    }
+                });
+
+                return { score, reasons };
+            }
+
+            /**
+             * Match findings against when_to_use description
+             */
+            matchWhenToUse(findings, whenToUse) {
+                const whenToUseLower = whenToUse.toLowerCase();
+                let score = 0;
+                let reason = null;
+
+                // Check for significant overlap with when_to_use
+                const whenToUseWords = whenToUseLower.split(/\s+/).filter(w => w.length > 4);
+                const matchingWords = whenToUseWords.filter(word => findings.includes(word));
+
+                if (matchingWords.length >= 5) {
+                    score = 12;
+                    reason = `Timing is right: ${whenToUse}`;
+                } else if (matchingWords.length >= 3) {
+                    score = 6;
+                } else if (matchingWords.length >= 2) {
+                    score = 3;
+                }
+
+                return { score, reason };
+            }
+
+            /**
+             * Score technique based on keyword matches
+             */
+            scoreByKeywords(findings, technique) {
+                let score = 0;
+
+                // Define impactful keywords for different categories
+                const keywordMappings = {
+                    discovery: ['customer', 'users', 'research', 'insights', 'understand', 'problem', 'validate'],
+                    strategy: ['direction', 'vision', 'alignment', 'priorities', 'goals', 'objectives'],
+                    validation: ['test', 'validate', 'experiment', 'prototype', 'verify', 'proof'],
+                    collaboration: ['stakeholder', 'alignment', 'communication', 'trust', 'partnership'],
+                    process: ['workflow', 'process', 'agile', 'sprint', 'delivery'],
+                    team: ['autonomy', 'ownership', 'empowered', 'decision']
+                };
+
+                const categoryKeywords = keywordMappings[technique.category.toLowerCase()] || [];
+
+                categoryKeywords.forEach(keyword => {
+                    if (findings.includes(keyword)) {
+                        score += 2;
+                    }
+                });
+
+                return score;
+            }
+
+            /**
+             * Remove duplicate or very similar reasons
+             */
+            deduplicateReasons(reasons) {
+                const unique = [];
+
+                reasons.forEach(reason => {
+                    const isDuplicate = unique.some(existing =>
+                        existing.toLowerCase() === reason.toLowerCase() ||
+                        existing.includes(reason) ||
+                        reason.includes(existing)
+                    );
+
+                    if (!isDuplicate) {
+                        unique.push(reason);
+                    }
+                });
+
+                return unique.slice(0, 3); // Limit to top 3 reasons
+            }
+        }
+
+        // Summary Generator Class
+        class SummaryGenerator {
+            constructor(stateManager) {
+                this.stateManager = stateManager;
+                this.techniqueRecommender = new TechniqueRecommender();
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                const btn = document.getElementById('generateSummary');
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        this.generateSummary();
+                    });
+                }
+            }
+
+            generateSummary() {
+                const state = this.stateManager.getState();
+                const coverage = this.stateManager.calculateCoverage();
+
+                const summary = {
+                    coverage: coverage,
+                    keyFindings: this.extractKeyFindings(state),
+                    gaps: this.identifyGaps(state),
+                    methodsUsed: this.analyzeMethodsUsed(state),
+                    phaseInsights: this.generatePhaseInsights(state),
+                    recommendedTechniques: this.techniqueRecommender.recommendTechniques(state)
+                };
+
+                this.renderSummary(summary);
+            }
+
+            extractKeyFindings(state) {
+                const findings = [];
+
+                Object.values(state.questions).forEach(q => {
+                    if (q.status === 'answered' && q.findings.trim()) {
+                        findings.push({
+                            phase: q.phase,
+                            questionId: q.questionId,
+                            questionText: q.text,
+                            text: q.findings
+                        });
+                    }
+                });
+
+                return findings;
+            }
+
+            identifyGaps(state) {
+                const gaps = [];
+
+                Object.values(state.questions).forEach(q => {
+                    if (q.status === 'open' || !q.findings.trim()) {
+                        gaps.push({
+                            questionId: q.questionId,
+                            text: q.text,
+                            phase: q.phase
+                        });
+                    }
+                });
+
+                return gaps;
+            }
+
+            analyzeMethodsUsed(state) {
+                const methodCounts = {};
+
+                discoveryMethods.forEach(m => {
+                    methodCounts[m.id] = {
+                        label: m.label,
+                        icon: m.icon,
+                        count: 0
+                    };
+                });
+
+                Object.values(state.questions).forEach(q => {
+                    q.discoveryMethods.forEach(method => {
+                        if (methodCounts[method]) {
+                            methodCounts[method].count++;
+                        }
+                    });
+                });
+
+                return methodCounts;
+            }
+
+            generatePhaseInsights(state) {
+                const insights = {};
+
+                for (let phase = 1; phase <= 5; phase++) {
+                    const phaseQuestions = Object.values(state.questions).filter(q => q.phase === phase);
+                    const answered = phaseQuestions.filter(q => q.status === 'answered');
+
+                    insights[phase] = {
+                        name: discoveryQuestions[`phase${phase}`].name,
+                        total: phaseQuestions.length,
+                        answered: answered.length,
+                        percentage: phaseQuestions.length > 0 ? (answered.length / phaseQuestions.length) * 100 : 0
+                    };
+                }
+
+                return insights;
+            }
+
+            renderSummary(summary) {
+                const summaryContainer = document.getElementById('summaryContent');
+
+                const html = `
+                    <div class="summary-section">
+                        <h3>Overall Coverage: ${summary.coverage.overall.toFixed(1)}%</h3>
+                        <p>${summary.coverage.answeredCount} of ${summary.coverage.totalCount} questions answered</p>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Key Findings</h4>
+                        ${summary.keyFindings.length > 0 ? `
+                            <ul>
+                                ${summary.keyFindings.map(f => `
+                                    <li>
+                                        <strong>${f.questionText}</strong><br>
+                                        ${f.text.substring(0, 300)}${f.text.length > 300 ? '...' : ''}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p>No findings recorded yet.</p>'}
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Discovery Gaps</h4>
+                        ${summary.gaps.length > 0 ? `
+                            <ul class="gaps-list">
+                                ${summary.gaps.map(g => `
+                                    <li>Phase ${g.phase}: ${g.text}</li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p style="color: #4caf50; font-weight: 600;">All questions answered! ✓</p>'}
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Discovery Methods Used</h4>
+                        <div class="methods-chart">
+                            ${Object.entries(summary.methodsUsed).map(([key, method]) => `
+                                <div class="method-stat ${method.count > 0 ? 'used' : ''}">
+                                    <span class="method-icon">${method.icon}</span>
+                                    <span class="method-label">${method.label}</span>
+                                    <span class="method-count">${method.count}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h4>Phase-by-Phase Coverage</h4>
+                        ${Object.entries(summary.phaseInsights).map(([phase, data]) => `
+                            <div class="phase-insight">
+                                <h5>Phase ${phase}: ${data.name}</h5>
+                                <div class="phase-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${data.percentage}%"></div>
+                                    </div>
+                                    <span>${data.answered}/${data.total} (${data.percentage.toFixed(0)}%)</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="summary-section">
+                        <h3>Recommended SVPG Techniques</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Based on your discovery findings, here are the most relevant coaching techniques:</p>
+                        ${summary.recommendedTechniques.length > 0 ? `
+                            <div class="techniques-recommendations">
+                                ${summary.recommendedTechniques.map((rec, index) => {
+                                    const technique = rec.technique;
+                                    const maxScore = summary.recommendedTechniques[0].score;
+                                    const matchPercentage = Math.round((rec.score / maxScore) * 100);
+
+                                    return `
+                                        <div class="technique-card">
+                                            <div class="technique-header">
+                                                <h4>${index + 1}. ${technique.name}</h4>
+                                                <span class="technique-badge ${technique.category.toLowerCase()}">${technique.category}</span>
+                                            </div>
+                                            <p class="technique-description">${technique.description}</p>
+
+                                            ${rec.matchReasons.length > 0 ? `
+                                                <div class="technique-match-reasons">
+                                                    <strong>Why this technique fits:</strong>
+                                                    <ul>
+                                                        ${rec.matchReasons.map(reason => `<li>${reason}</li>`).join('')}
+                                                    </ul>
+                                                </div>
+                                            ` : ''}
+
+                                            <div class="technique-meta">
+                                                <div class="meta-item">
+                                                    <span class="meta-label">When to use:</span>
+                                                    <span class="meta-value">${technique.when_to_use}</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <span class="meta-label">Time commitment:</span>
+                                                    <span class="meta-value">${technique.time_commitment}</span>
+                                                </div>
+                                                <div class="meta-item">
+                                                    <span class="meta-label">Team maturity:</span>
+                                                    <span class="meta-value">${technique.team_maturity.join(', ')}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="technique-outcomes">
+                                                <strong>Key Outcomes:</strong>
+                                                <ul>
+                                                    ${technique.outcomes.map(o => `<li>${o}</li>`).join('')}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        ` : '<p>Answer more discovery questions to get personalized technique recommendations.</p>'}
+                    </div>
+                `;
+
+                summaryContainer.innerHTML = html;
+            }
+        }
+
+        // View Mode Manager Class
+        class ViewModeManager {
+            constructor() {
+                this.isViewMode = false;
+                this.setupEventListeners();
+                this.updateModeUI();
+            }
+
+            setupEventListeners() {
+                const toggleBtn = document.getElementById('toggleModeBtn');
+                if (toggleBtn) {
+                    toggleBtn.addEventListener('click', () => {
+                        this.toggleMode();
+                    });
+                }
+            }
+
+            toggleMode() {
+                this.isViewMode = !this.isViewMode;
+                this.updateModeUI();
+                this.applyMode();
+
+                // Show notification
+                const message = this.isViewMode
+                    ? 'Switched to View Mode - All inputs are now read-only'
+                    : 'Switched to Edit Mode - You can now modify findings';
+                const type = this.isViewMode ? 'info' : 'success';
+
+                if (window.dataManager) {
+                    window.dataManager.showNotification(message, type);
+                }
+            }
+
+            setMode(isViewMode) {
+                this.isViewMode = isViewMode;
+                this.updateModeUI();
+                this.applyMode();
+            }
+
+            updateModeUI() {
+                const badge = document.getElementById('modeBadge');
+                const toggleBtn = document.getElementById('toggleModeBtn');
+
+                if (this.isViewMode) {
+                    badge.textContent = '👁️ View Mode';
+                    badge.className = 'mode-badge view-mode';
+                    toggleBtn.textContent = '✏️ Switch to Edit Mode';
+                } else {
+                    badge.textContent = '✏️ Edit Mode';
+                    badge.className = 'mode-badge edit-mode';
+                    toggleBtn.textContent = '👁️ Switch to View Mode';
+                }
+            }
+
+            applyMode() {
+                // Disable/enable metadata inputs
+                document.getElementById('clientName').disabled = this.isViewMode;
+                document.getElementById('engagementDate').disabled = this.isViewMode;
+                document.getElementById('coachName').disabled = this.isViewMode;
+
+                // Disable/enable all question inputs
+                document.querySelectorAll('.findings-input, .notes-input').forEach(input => {
+                    input.disabled = this.isViewMode;
+                });
+
+                // Disable/enable all method tags
+                document.querySelectorAll('.method-tag').forEach(tag => {
+                    tag.disabled = this.isViewMode;
+                });
+
+                // Disable/enable all mark complete buttons
+                document.querySelectorAll('.btn-mark-complete').forEach(btn => {
+                    btn.disabled = this.isViewMode;
+                });
+
+                // Disable/enable new engagement button (don't want to accidentally clear in view mode)
+                const newEngagementBtn = document.getElementById('newEngagement');
+                if (newEngagementBtn) {
+                    newEngagementBtn.disabled = this.isViewMode;
+                    newEngagementBtn.style.opacity = this.isViewMode ? '0.5' : '1';
+                }
+            }
+
+            getMode() {
+                return this.isViewMode ? 'view' : 'edit';
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            stateManager = new QuestionStateManager();
+            tabNavigator = new TabNavigator();
+            dataManager = new DataManager(stateManager);
+            summaryGenerator = new SummaryGenerator(stateManager);
+            viewModeManager = new ViewModeManager();
+
+            // Make managers globally accessible
+            window.viewModeManager = viewModeManager;
+            window.dataManager = dataManager;
+
+            // Set default engagement date
+            document.getElementById('engagementDate').value = new Date().toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>

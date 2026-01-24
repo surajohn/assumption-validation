@@ -1845,12 +1845,12 @@
                     <div class="stat-details">
                         <div class="stat-row">
                             <span class="icon">✓</span>
-                            <span class="stat-value">0/21</span>
+                            <span class="stat-value">0/36</span>
                             <span class="stat-label">Answered</span>
                         </div>
                         <div class="stat-row">
                             <span class="icon">○</span>
-                            <span class="open-count">21</span>
+                            <span class="open-count">36</span>
                             <span class="stat-label">Open</span>
                         </div>
                     </div>
@@ -1898,10 +1898,10 @@
 
         <!-- Tab Navigation -->
         <nav class="tabs-navigation">
-            <button class="tab-btn active" data-phase="1">Phase 1: Foundation<span class="tab-badge">0/4</span></button>
-            <button class="tab-btn" data-phase="2">Phase 2: Success<span class="tab-badge">0/4</span></button>
-            <button class="tab-btn" data-phase="3">Phase 3: Structure<span class="tab-badge">0/4</span></button>
-            <button class="tab-btn" data-phase="4">Phase 4: Dynamics<span class="tab-badge">0/8</span></button>
+            <button class="tab-btn active" data-phase="1">Phase 1: Foundation<span class="tab-badge">0/6</span></button>
+            <button class="tab-btn" data-phase="2">Phase 2: Success<span class="tab-badge">0/10</span></button>
+            <button class="tab-btn" data-phase="3">Phase 3: Structure<span class="tab-badge">0/6</span></button>
+            <button class="tab-btn" data-phase="4">Phase 4: Dynamics<span class="tab-badge">0/13</span></button>
             <button class="tab-btn" data-phase="5">Phase 5: Assumptions<span class="tab-badge">0/1</span></button>
             <button class="tab-btn" data-phase="summary">Summary</button>
         </nav>
@@ -1944,7 +1944,9 @@
                     { id: "q1", text: "Why does this product exist?" },
                     { id: "q2", text: "Who actually experiences the problem we are solving?" },
                     { id: "q3", text: "How do we know this problem is worth solving now?" },
-                    { id: "q4", text: "What decision are we trying to enable or change?" }
+                    { id: "q4", text: "What decision are we trying to enable or change?" },
+                    { id: "q22", text: "What alternatives do users have today?" },
+                    { id: "q23", text: "What's been tried before and why did it fail?" }
                 ]
             },
             phase2: {
@@ -1953,7 +1955,13 @@
                     { id: "q5", text: "What would good look like three months from now?" },
                     { id: "q6", text: "What success would look like in a (insert time period)?" },
                     { id: "q7", text: "How will we know this worked?" },
-                    { id: "q8", text: "The team's relationship with metrics" }
+                    { id: "q8", text: "The team's relationship with metrics" },
+                    { id: "q24", text: "What is the team actually measuring today?" },
+                    { id: "q25", text: "Do we have baseline data to compare against?" },
+                    { id: "q26", text: "Does the team have the tools/infrastructure to measure outcomes?" },
+                    { id: "q27", text: "How long does it take to know if something worked?" },
+                    { id: "q28", text: "How do we know our changes caused the outcome vs external factors?" },
+                    { id: "q29", text: "Are we tracking leading indicators or only lagging ones?" }
                 ]
             },
             phase3: {
@@ -1962,7 +1970,9 @@
                     { id: "q9", text: "Where product ownership actually lives today?" },
                     { id: "q10", text: "Role clarity across PO, PMs, and engineers" },
                     { id: "q11", text: "Who decides when priorities collide?" },
-                    { id: "q12", text: "How intentional the backlog really is?" }
+                    { id: "q12", text: "How intentional the backlog really is?" },
+                    { id: "q30", text: "Are key stakeholders aligned on the vision and priorities?" },
+                    { id: "q31", text: "How do decisions and learnings get shared across the org?" }
                 ]
             },
             phase4: {
@@ -1975,7 +1985,12 @@
                     { id: "q17", text: "Hidden stakeholders who actually control decisions" },
                     { id: "q18", text: "Budget or resource constraints that nobody talks about" },
                     { id: "q19", text: "Technical debt or system constraints limiting autonomy" },
-                    { id: "q20", text: "Geographic or org structure issues (distributed teams, cross functional friction)" }
+                    { id: "q20", text: "Geographic or org structure issues (distributed teams, cross functional friction)" },
+                    { id: "q32", text: "How often does the team directly interact with customers/users?" },
+                    { id: "q33", text: "What external dependencies could block or delay progress?" },
+                    { id: "q34", text: "How does the team currently learn and experiment?" },
+                    { id: "q35", text: "Does the team have the capabilities needed for this work?" },
+                    { id: "q36", text: "Are there hard external deadlines driving this work?" }
                 ]
             },
             phase5: {
@@ -2064,7 +2079,7 @@
                     questions: {}
                 };
 
-                // Initialize all 21 questions
+                // Initialize all 36 questions
                 Object.keys(discoveryQuestions).forEach(phaseKey => {
                     const phase = discoveryQuestions[phaseKey];
                     const phaseNum = parseInt(phaseKey.replace('phase', ''));
@@ -5679,7 +5694,7 @@
             const state = stateManager.getState();
             testFramework.assertNotNull(state.questions, 'Questions object exists');
             const questionCount = Object.keys(state.questions).length;
-            testFramework.assertEqual(questionCount, 21, 'Should have 21 questions');
+            testFramework.assertEqual(questionCount, 36, 'Should have 36 questions');
         });
 
         testFramework.test('Export Functionality Available', () => {

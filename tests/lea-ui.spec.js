@@ -198,9 +198,9 @@ test.describe('Import Functionality Tests', () => {
       ],
       analysis: {
         coverage: {
-          totalQuestions: 21,
+          totalQuestions: 36,
           answeredQuestions: 1,
-          coveragePercentage: 4.76
+          coveragePercentage: 2.78
         },
         phaseCompletion: {},
         recommendedTechniques: {}

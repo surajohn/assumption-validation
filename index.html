@@ -1728,6 +1728,74 @@
                 }
             }
         }
+
+        /* Session Health Tracking */
+        .session-health-tracker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .session-health-tracker.health-good {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .session-health-tracker.health-warning {
+            background: #fff8e1;
+            color: #f57f17;
+            border: 1px solid #ffcc80;
+        }
+
+        .session-health-tracker.health-degrading {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffb74d;
+        }
+
+        .session-health-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .session-health-count {
+            font-weight: 700;
+        }
+
+        .session-health-message {
+            font-size: 0.8em;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .btn-fresh-session {
+            padding: 6px 12px !important;
+            font-size: 0.85em !important;
+            background: white !important;
+            color: #666 !important;
+            border: 1px solid #ddd !important;
+            width: auto !important;
+        }
+
+        .btn-fresh-session:hover {
+            border-color: #4caf50 !important;
+            color: #4caf50 !important;
+            background: #f1f8e9 !important;
+        }
+
+        @media print {
+            .session-health-tracker {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1754,6 +1822,13 @@
                 <button id="exportPdfBtn" class="btn-secondary">Export PDF</button>
                 <button id="runTestsBtn" class="btn-secondary">Run Tests</button>
                 <button id="toggleModeBtn" class="btn-secondary">View Mode</button>
+                <div id="sessionHealthTracker" class="session-health-tracker health-good">
+                    <div class="session-health-content">
+                        <span class="session-health-count">Session: 0 analyses</span>
+                        <span class="session-health-message"></span>
+                    </div>
+                    <button id="freshSessionBtn" class="btn-fresh-session">Fresh Session</button>
+                </div>
             </div>
         </div>
 
@@ -2935,6 +3010,11 @@
                 a.click();
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
+
+                // Increment session health counter on export
+                if (window.sessionHealthManager) {
+                    window.sessionHealthManager.increment();
+                }
 
                 this.showNotification('Enhanced discovery data (v2.0) exported successfully', 'success');
             }
@@ -5346,6 +5426,104 @@
         }
 
         // ============================================
+        // SESSION HEALTH MANAGER
+        // ============================================
+        class SessionHealthManager {
+            constructor() {
+                this.storageKey = 'lea_session_count';
+                this.count = this.loadCount();
+                this.setupEventListeners();
+                this.updateDisplay();
+                console.log(`[SessionHealth] Initialized with count: ${this.count}`);
+            }
+
+            loadCount() {
+                const stored = localStorage.getItem(this.storageKey);
+                return stored ? parseInt(stored, 10) : 0;
+            }
+
+            saveCount() {
+                localStorage.setItem(this.storageKey, this.count.toString());
+                console.log(`[SessionHealth] Saved count: ${this.count}`);
+            }
+
+            increment() {
+                this.count++;
+                this.saveCount();
+                this.updateDisplay();
+                console.log(`[SessionHealth] Incremented to: ${this.count}`);
+            }
+
+            reset() {
+                this.count = 0;
+                this.saveCount();
+                this.updateDisplay();
+                console.log(`[SessionHealth] Reset to 0`);
+
+                // Show confirmation notification
+                if (window.dataManager) {
+                    window.dataManager.showNotification('Session reset - optimal analysis quality restored', 'success');
+                }
+            }
+
+            getHealthStatus() {
+                if (this.count <= 1) {
+                    return {
+                        class: 'health-good',
+                        message: ''
+                    };
+                } else if (this.count === 2) {
+                    return {
+                        class: 'health-warning',
+                        message: 'Session health: Good - Consider fresh session after next analysis'
+                    };
+                } else {
+                    return {
+                        class: 'health-degrading',
+                        message: 'Session health: Degrading - Fresh session recommended for optimal quality'
+                    };
+                }
+            }
+
+            updateDisplay() {
+                const tracker = document.getElementById('sessionHealthTracker');
+                const countEl = tracker.querySelector('.session-health-count');
+                const messageEl = tracker.querySelector('.session-health-message');
+
+                if (!tracker || !countEl || !messageEl) {
+                    console.error('[SessionHealth] Could not find tracker elements');
+                    return;
+                }
+
+                const status = this.getHealthStatus();
+
+                // Update count text
+                const analysisWord = this.count === 1 ? 'analysis' : 'analyses';
+                countEl.textContent = `Session: ${this.count} ${analysisWord}`;
+
+                // Update message
+                messageEl.textContent = status.message;
+
+                // Update class
+                tracker.classList.remove('health-good', 'health-warning', 'health-degrading');
+                tracker.classList.add(status.class);
+            }
+
+            setupEventListeners() {
+                const freshSessionBtn = document.getElementById('freshSessionBtn');
+                if (freshSessionBtn) {
+                    freshSessionBtn.addEventListener('click', () => {
+                        this.reset();
+                    });
+                }
+            }
+
+            getCount() {
+                return this.count;
+            }
+        }
+
+        // ============================================
         // TEST FRAMEWORK
         // ============================================
         class TestFramework {
@@ -5460,6 +5638,7 @@
             testFramework.assertNotNull(dataManager, 'DataManager should be initialized');
             testFramework.assertNotNull(summaryGenerator, 'SummaryGenerator should be initialized');
             testFramework.assertNotNull(viewModeManager, 'ViewModeManager should be initialized');
+            testFramework.assertNotNull(sessionHealthManager, 'SessionHealthManager should be initialized');
         });
 
         testFramework.test('Technique Library Loads (50 techniques)', () => {
@@ -5531,8 +5710,16 @@
             testFramework.assertEqual(viewModeManager.getMode(), 'edit', 'Default should be edit mode');
         });
 
+        testFramework.test('Session Health Manager Works', () => {
+            testFramework.assertNotNull(sessionHealthManager, 'SessionHealthManager should be initialized');
+            testFramework.assertNotNull(sessionHealthManager.increment, 'Increment method exists');
+            testFramework.assertNotNull(sessionHealthManager.reset, 'Reset method exists');
+            testFramework.assertNotNull(sessionHealthManager.getCount, 'GetCount method exists');
+            testFramework.assert(typeof sessionHealthManager.getCount() === 'number', 'Count should be a number');
+        });
+
         // Global manager variables
-        let stateManager, tabNavigator, dataManager, summaryGenerator, viewModeManager;
+        let stateManager, tabNavigator, dataManager, summaryGenerator, viewModeManager, sessionHealthManager;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', () => {
@@ -5541,10 +5728,12 @@
             dataManager = new DataManager(stateManager);
             summaryGenerator = new SummaryGenerator(stateManager);
             viewModeManager = new ViewModeManager();
+            sessionHealthManager = new SessionHealthManager();
 
             // Make managers globally accessible
             window.viewModeManager = viewModeManager;
             window.dataManager = dataManager;
+            window.sessionHealthManager = sessionHealthManager;
 
             // Set default engagement date
             document.getElementById('engagementDate').value = new Date().toISOString().split('T')[0];

@@ -10,6 +10,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:8888',
     trace: 'on-first-retry',
+    acceptDownloads: true,
   },
   webServer: {
     command: 'python3 -m http.server 8888',

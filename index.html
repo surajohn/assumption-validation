@@ -588,6 +588,7 @@
             opacity: 0.6;
             cursor: not-allowed;
             background: #f5f5f5;
+            color: #333;
         }
 
         .method-tag:disabled:hover {
@@ -595,6 +596,11 @@
             box-shadow: none;
             border-color: #ddd;
             background: #f5f5f5;
+        }
+
+        .method-tag.active:disabled {
+            background: #f9a825;
+            color: #333;
         }
 
         /* Smart Suggestion Banner */
@@ -1925,7 +1931,7 @@
         </div>
 
         <!-- Hidden file input for JSON/Markdown import -->
-        <input type="file" id="importInput" accept=".json,.md" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <input type="file" id="importInput" accept=".json,.md,application/json,text/markdown,text/x-markdown,text/plain" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <input type="file" id="compareInput" accept=".json" multiple style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 
         <!-- Notifications container -->
@@ -2124,8 +2130,8 @@
                     }
                     if (e.target.matches('.btn-nav')) {
                         const targetPhase = e.target.dataset.targetPhase;
-                        if (targetPhase) {
-                            this.tabNavigator.switchTab(targetPhase);
+                        if (targetPhase && tabNavigator) {
+                            tabNavigator.switchTab(targetPhase);
                         }
                     }
                     // Handle technique card collapse
@@ -2552,7 +2558,7 @@
                             </div>
                         ` : '';
 
-                        const questionsHTML = phase.questions.map(q => this.createQuestionCardHTML(q, phaseNum)).join('');
+                        const questionsHTML = phase.questions.map((q, index) => this.createQuestionCardHTML(q, phaseNum, index + 1)).join('');
 
                         // Add phase navigation buttons
                         const navigationHTML = `
@@ -2578,14 +2584,13 @@
                 });
             }
 
-            createQuestionCardHTML(question, phase) {
-                const qNum = parseInt(question.id.replace('q', ''));
+            createQuestionCardHTML(question, phase, questionIndex) {
                 const exampleText = this.getQuestionExample(question.id);
 
                 return `
                     <div class="question-card" data-question-id="${question.id}" data-phase="${phase}" data-status="open">
                         <div class="question-header">
-                            <span class="question-number">Q${qNum}</span>
+                            <span class="question-number">Q${questionIndex}</span>
                             <h3 class="question-text">${question.text}</h3>
                             <span class="status-badge open">○ Open</span>
                         </div>
@@ -4792,29 +4797,37 @@
 
                 // Use setTimeout to allow UI to update
                 setTimeout(() => {
-                    const state = this.stateManager.getState();
-                    const coverage = this.stateManager.calculateCoverage();
+                    try {
+                        const state = this.stateManager.getState();
+                        const coverage = this.stateManager.calculateCoverage();
 
-                    // Get recommendations (returns {discovery: [], coaching: []})
-                    const recommendations = this.techniqueRecommender.recommendTechniques(state, 'all');
+                        // Get recommendations (returns {discovery: [], coaching: []})
+                        const recommendations = this.techniqueRecommender.recommendTechniques(state, 'all');
 
-                    const summary = {
-                        coverage: coverage,
-                        keyFindings: this.extractKeyFindings(state),
-                        gaps: this.identifyGaps(state),
-                        methodsUsed: this.analyzeMethodsUsed(state),
-                        phaseInsights: this.generatePhaseInsights(state),
-                        discoveryTechniques: recommendations.discovery,
-                        coachingTechniques: recommendations.coaching
-                    };
+                        const summary = {
+                            coverage: coverage,
+                            keyFindings: this.extractKeyFindings(state),
+                            gaps: this.identifyGaps(state),
+                            methodsUsed: this.analyzeMethodsUsed(state),
+                            phaseInsights: this.generatePhaseInsights(state),
+                            discoveryTechniques: recommendations.discovery,
+                            coachingTechniques: recommendations.coaching
+                        };
 
-                    this.renderSummary(summary);
-
-                    // Restore button state
-                    btn.disabled = false;
-                    btn.textContent = originalText;
-                    btn.style.cursor = 'pointer';
-                    btn.style.opacity = '1';
+                        this.renderSummary(summary);
+                    } catch (error) {
+                        console.error('Error generating summary:', error);
+                        const summaryContainer = document.getElementById('summaryContent');
+                        if (summaryContainer) {
+                            summaryContainer.innerHTML = `<div class="error-message" style="color: #d32f2f; padding: 20px;">Error generating summary: ${error.message}</div>`;
+                        }
+                    } finally {
+                        // Restore button state
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                        btn.style.cursor = 'pointer';
+                        btn.style.opacity = '1';
+                    }
                 }, 100);
             }
 

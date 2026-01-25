@@ -6,7 +6,7 @@ A comprehensive web-based tool for product coaches to conduct systematic discove
 ## What is LEA?
 
 LEA (Learning Empowered Advisor) helps product coaches:
-- **Conduct structured discovery** across 21 critical questions in 5 phases
+- **Conduct structured discovery** across 36 critical questions in 5 phases
 - **Track findings** with discovery methods (interviews, workshops, observation, etc.)
 - **Generate leadership summaries** with key insights and gaps
 - **Receive smart recommendations** from a library of 50 product management techniques
@@ -15,20 +15,29 @@ LEA (Learning Empowered Advisor) helps product coaches:
 
 ## The 5 Discovery Phases
 
-### Phase 1: Foundation & Context
-Understanding product purpose, market position, and team structure (4 questions)
+### Phase 1: Foundation & Context (6 questions)
+Understanding product purpose, market position, and team structure
+- Why the product exists and who experiences the problem
+- What alternatives users have and what's been tried before
 
-### Phase 2: Success & Outcomes
-Defining what success means and how it's measured (4 questions)
+### Phase 2: Success & Outcomes (10 questions)
+Defining what success means and how it's measured
+- Vision for success at various time horizons
+- Measurement infrastructure, baselines, and leading indicators
 
-### Phase 3: Structure & Ownership
-Examining decision-making processes and team empowerment (5 questions)
+### Phase 3: Structure & Ownership (6 questions)
+Examining decision-making processes and team empowerment
+- Where product ownership lives and how decisions are made
+- Stakeholder alignment and knowledge sharing
 
-### Phase 4: Team Dynamics & Constraints
-Exploring collaboration patterns and organizational challenges (4 questions)
+### Phase 4: Team Dynamics & Constraints (13 questions)
+Exploring collaboration patterns and organizational challenges
+- Team autonomy, past failures, hidden stakeholders
+- Customer interaction, dependencies, and experimentation culture
 
-### Phase 5: Untested Assumptions
-Identifying critical risks and knowledge gaps (4 questions)
+### Phase 5: Untested Assumptions (1 question)
+Identifying critical risks and knowledge gaps
+- What assumptions remain untested
 
 ## How to Use LEA
 
@@ -116,7 +125,7 @@ LEA includes automated regression tests:
 Tests verify:
 - ✅ All manager classes initialize
 - ✅ Technique library loads (50 techniques)
-- ✅ Discovery questions defined (21 questions)
+- ✅ Discovery questions defined (36 questions)
 - ✅ Recommendation engine works
 - ✅ Export/Import functionality
 - ✅ Summary generator
@@ -144,7 +153,7 @@ Tests verify:
       "discoveryMethods": ["interview", "document_review"],
       "lastUpdated": "2025-12-15T14:22:00Z"
     }
-    // ... 20 more questions
+    // ... 35 more questions
   ],
   "analysis": {
     "coverage": {
@@ -161,7 +170,7 @@ Tests verify:
 ## Use Cases
 
 ### 1. Initial Client Assessment
-- Run through all 21 questions in first 2-3 weeks
+- Run through all 36 questions in first 2-3 weeks
 - Export snapshot to track baseline state
 - Use technique recommendations to build coaching plan
 
@@ -182,7 +191,7 @@ Tests verify:
 
 ## Customization Ideas
 
-1. **Add custom questions** - Expand beyond the core 21 questions
+1. **Add custom questions** - Expand beyond the core 36 questions
 2. **Create industry templates** - Pre-populate findings for common scenarios
 3. **Build technique library** - Add your own coaching techniques alongside SVPG
 4. **Integration hooks** - Connect to project management tools or CRMs
@@ -216,6 +225,6 @@ This is a standalone coaching tool. To extend it:
 
 ---
 
-**Version:** 2.0
-**Last Updated:** December 2025
+**Version:** 2.1
+**Last Updated:** January 2026
 **License:** Personal coaching use

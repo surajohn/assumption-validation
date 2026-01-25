@@ -1735,73 +1735,6 @@
             }
         }
 
-        /* Session Health Tracking */
-        .session-health-tracker {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-left: auto;
-            white-space: nowrap;
-        }
-
-        .session-health-tracker.health-good {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
-        }
-
-        .session-health-tracker.health-warning {
-            background: #fff8e1;
-            color: #f57f17;
-            border: 1px solid #ffcc80;
-        }
-
-        .session-health-tracker.health-degrading {
-            background: #fff3e0;
-            color: #e65100;
-            border: 1px solid #ffb74d;
-        }
-
-        .session-health-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .session-health-count {
-            font-weight: 700;
-        }
-
-        .session-health-message {
-            font-size: 0.8em;
-            font-weight: 400;
-            opacity: 0.9;
-        }
-
-        .btn-fresh-session {
-            padding: 6px 12px !important;
-            font-size: 0.85em !important;
-            background: white !important;
-            color: #666 !important;
-            border: 1px solid #ddd !important;
-            width: auto !important;
-        }
-
-        .btn-fresh-session:hover {
-            border-color: #4caf50 !important;
-            color: #4caf50 !important;
-            background: #f1f8e9 !important;
-        }
-
-        @media print {
-            .session-health-tracker {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1819,7 +1752,6 @@
             </div>
             <input id="clientName" type="text" placeholder="Client Name">
             <input id="engagementDate" type="date" style="max-width: 180px;">
-            <input id="coachName" type="text" placeholder="Coach Name">
             <div class="metadata-actions">
                 <button id="newEngagement" class="btn-secondary">New Engagement</button>
                 <button id="importBtn" class="btn-secondary">Import</button>
@@ -1827,14 +1759,6 @@
                 <button id="exportBtn" class="btn-secondary">Export JSON</button>
                 <button id="exportPdfBtn" class="btn-secondary">Export PDF</button>
                 <button id="runTestsBtn" class="btn-secondary">Run Tests</button>
-                <button id="toggleModeBtn" class="btn-secondary">View Mode</button>
-                <div id="sessionHealthTracker" class="session-health-tracker health-good">
-                    <div class="session-health-content">
-                        <span class="session-health-count">Session: 0 analyses</span>
-                        <span class="session-health-message"></span>
-                    </div>
-                    <button id="freshSessionBtn" class="btn-fresh-session">Fresh Session</button>
-                </div>
             </div>
         </div>
 
@@ -2079,7 +2003,6 @@
                     metadata: {
                         clientName: "",
                         engagementDate: today,
-                        coach: "",
                         lastModified: ""
                     },
                     questions: {}
@@ -2191,12 +2114,11 @@
                 });
 
                 // Metadata listeners
-                ['clientName', 'engagementDate', 'coachName'].forEach(id => {
+                ['clientName', 'engagementDate'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         el.addEventListener('input', (e) => {
-                            const key = id === 'coachName' ? 'coach' : id;
-                            this.state.metadata[key] = e.target.value;
+                            this.state.metadata[id] = e.target.value;
                             this.showAutoSaveIndicator();
                         });
                     }
@@ -2726,15 +2648,9 @@
                 if (newState.metadata) {
                     document.getElementById('clientName').value = newState.metadata.clientName || '';
                     document.getElementById('engagementDate').value = newState.metadata.engagementDate || '';
-                    document.getElementById('coachName').value = newState.metadata.coach || '';
                 }
 
                 this.updateProgress();
-
-                // Re-apply current mode after restoring state
-                if (window.viewModeManager) {
-                    window.viewModeManager.applyMode();
-                }
             }
         }
 
@@ -2923,11 +2839,6 @@
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
 
-                // Increment session health counter on export
-                if (window.sessionHealthManager) {
-                    window.sessionHealthManager.increment();
-                }
-
                 this.showNotification('Enhanced discovery data (v2.0) exported successfully', 'success');
             }
 
@@ -2947,15 +2858,14 @@
                     doc.setFontSize(12);
                     doc.text(`Client: ${state.metadata.clientName || 'N/A'}`, 20, 35);
                     doc.text(`Date: ${state.metadata.engagementDate || 'N/A'}`, 20, 42);
-                    doc.text(`Coach: ${state.metadata.coach || 'N/A'}`, 20, 49);
 
                     // Coverage
                     doc.setFontSize(14);
-                    doc.text('Overall Coverage', 20, 65);
+                    doc.text('Overall Coverage', 20, 52);
                     doc.setFontSize(11);
-                    doc.text(`${coverage.answeredCount}/${coverage.totalCount} questions answered (${coverage.overall.toFixed(1)}%)`, 20, 73);
+                    doc.text(`${coverage.answeredCount}/${coverage.totalCount} questions answered (${coverage.overall.toFixed(1)}%)`, 20, 60);
 
-                    let yPos = 85;
+                    let yPos = 72;
 
                     // Key Findings
                     doc.setFontSize(14);
@@ -3037,20 +2947,13 @@
 
                         // Show appropriate notification based on version
                         const versionInfo = version === "2.0" ? " (v2.0 with analysis)" : "";
-                        this.showNotification(`Discovery data${versionInfo} imported successfully - Switched to View Mode`, 'success');
+                        this.showNotification(`Discovery data${versionInfo} imported successfully`, 'success');
 
                         // If v2.0, log analysis data (optional - can be used later)
                         if (version === "2.0" && importedData.analysis) {
                             console.log('Imported analysis data:', importedData.analysis);
                             console.log('Recommended techniques:', importedData.analysis.recommendedTechniques);
                             // Analysis is available but we regenerate it on demand via Summary tab
-                        }
-
-                        // Switch to view mode after import (safety measure)
-                        if (window.viewModeManager) {
-                            setTimeout(() => {
-                                window.viewModeManager.setMode(true);
-                            }, 100);
                         }
 
                     } catch (error) {
@@ -3087,14 +2990,7 @@
                         this.stateManager.setState(parsedData);
                         console.log('setState completed');
 
-                        this.showNotification('Markdown imported successfully - Switched to View Mode', 'success');
-
-                        // Switch to view mode after import
-                        if (window.viewModeManager) {
-                            setTimeout(() => {
-                                window.viewModeManager.setMode(true);
-                            }, 100);
-                        }
+                        this.showNotification('Markdown imported successfully', 'success');
 
                     } catch (error) {
                         console.error('Markdown import error:', error);
@@ -3144,13 +3040,6 @@
 
                 if (projectMatch) {
                     newState.metadata.clientName = projectMatch[1].trim();
-                }
-
-                if (participantsMatch) {
-                    // Extract first name (before parentheses or comma)
-                    const participants = participantsMatch[1].trim();
-                    const firstParticipant = participants.split(/[,(]/)[0].trim();
-                    newState.metadata.coach = firstParticipant;
                 }
 
                 newState.metadata.lastModified = now;
@@ -5077,193 +4966,6 @@
 
         }
 
-        // View Mode Manager Class
-        class ViewModeManager {
-            constructor() {
-                this.isViewMode = false;
-                this.setupEventListeners();
-                this.updateModeUI();
-            }
-
-            setupEventListeners() {
-                const toggleBtn = document.getElementById('toggleModeBtn');
-                if (toggleBtn) {
-                    toggleBtn.addEventListener('click', () => {
-                        this.toggleMode();
-                    });
-                }
-            }
-
-            toggleMode() {
-                this.isViewMode = !this.isViewMode;
-                this.updateModeUI();
-                this.applyMode();
-
-                // Show notification
-                const message = this.isViewMode
-                    ? 'Switched to View Mode - All inputs are now read-only'
-                    : 'Switched to Edit Mode - You can now modify findings';
-                const type = this.isViewMode ? 'info' : 'success';
-
-                if (window.dataManager) {
-                    window.dataManager.showNotification(message, type);
-                }
-            }
-
-            setMode(isViewMode) {
-                this.isViewMode = isViewMode;
-                this.updateModeUI();
-                this.applyMode();
-            }
-
-            getMode() {
-                return this.isViewMode ? 'view' : 'edit';
-            }
-
-            updateModeUI() {
-                const toggleBtn = document.getElementById('toggleModeBtn');
-
-                if (this.isViewMode) {
-                    toggleBtn.textContent = 'Edit Mode';
-                    toggleBtn.className = 'btn-secondary';
-                } else {
-                    toggleBtn.textContent = 'View Mode';
-                    toggleBtn.className = 'btn-secondary';
-                }
-            }
-
-            applyMode() {
-                // Disable/enable metadata inputs
-                document.getElementById('clientName').disabled = this.isViewMode;
-                document.getElementById('engagementDate').disabled = this.isViewMode;
-                document.getElementById('coachName').disabled = this.isViewMode;
-
-                // Disable/enable all question inputs
-                document.querySelectorAll('.findings-input, .notes-input').forEach(input => {
-                    input.disabled = this.isViewMode;
-                });
-
-                // Disable/enable all method tags
-                document.querySelectorAll('.method-tag').forEach(tag => {
-                    tag.disabled = this.isViewMode;
-                });
-
-                // Disable/enable all mark complete buttons
-                document.querySelectorAll('.btn-mark-complete').forEach(btn => {
-                    btn.disabled = this.isViewMode;
-                });
-
-                // Disable/enable new engagement button (don't want to accidentally clear in view mode)
-                const newEngagementBtn = document.getElementById('newEngagement');
-                if (newEngagementBtn) {
-                    newEngagementBtn.disabled = this.isViewMode;
-                    newEngagementBtn.style.opacity = this.isViewMode ? '0.5' : '1';
-                }
-            }
-
-            getMode() {
-                return this.isViewMode ? 'view' : 'edit';
-            }
-        }
-
-        // ============================================
-        // SESSION HEALTH MANAGER
-        // ============================================
-        class SessionHealthManager {
-            constructor() {
-                this.storageKey = 'lea_session_count';
-                this.count = this.loadCount();
-                this.setupEventListeners();
-                this.updateDisplay();
-                console.log(`[SessionHealth] Initialized with count: ${this.count}`);
-            }
-
-            loadCount() {
-                const stored = localStorage.getItem(this.storageKey);
-                return stored ? parseInt(stored, 10) : 0;
-            }
-
-            saveCount() {
-                localStorage.setItem(this.storageKey, this.count.toString());
-                console.log(`[SessionHealth] Saved count: ${this.count}`);
-            }
-
-            increment() {
-                this.count++;
-                this.saveCount();
-                this.updateDisplay();
-                console.log(`[SessionHealth] Incremented to: ${this.count}`);
-            }
-
-            reset() {
-                this.count = 0;
-                this.saveCount();
-                this.updateDisplay();
-                console.log(`[SessionHealth] Reset to 0`);
-
-                // Show confirmation notification
-                if (window.dataManager) {
-                    window.dataManager.showNotification('Session reset - optimal analysis quality restored', 'success');
-                }
-            }
-
-            getHealthStatus() {
-                if (this.count <= 1) {
-                    return {
-                        class: 'health-good',
-                        message: ''
-                    };
-                } else if (this.count === 2) {
-                    return {
-                        class: 'health-warning',
-                        message: 'Session health: Good - Consider fresh session after next analysis'
-                    };
-                } else {
-                    return {
-                        class: 'health-degrading',
-                        message: 'Session health: Degrading - Fresh session recommended for optimal quality'
-                    };
-                }
-            }
-
-            updateDisplay() {
-                const tracker = document.getElementById('sessionHealthTracker');
-                const countEl = tracker.querySelector('.session-health-count');
-                const messageEl = tracker.querySelector('.session-health-message');
-
-                if (!tracker || !countEl || !messageEl) {
-                    console.error('[SessionHealth] Could not find tracker elements');
-                    return;
-                }
-
-                const status = this.getHealthStatus();
-
-                // Update count text
-                const analysisWord = this.count === 1 ? 'analysis' : 'analyses';
-                countEl.textContent = `Session: ${this.count} ${analysisWord}`;
-
-                // Update message
-                messageEl.textContent = status.message;
-
-                // Update class
-                tracker.classList.remove('health-good', 'health-warning', 'health-degrading');
-                tracker.classList.add(status.class);
-            }
-
-            setupEventListeners() {
-                const freshSessionBtn = document.getElementById('freshSessionBtn');
-                if (freshSessionBtn) {
-                    freshSessionBtn.addEventListener('click', () => {
-                        this.reset();
-                    });
-                }
-            }
-
-            getCount() {
-                return this.count;
-            }
-        }
-
         // ============================================
         // TEST FRAMEWORK
         // ============================================
@@ -5378,8 +5080,6 @@
             testFramework.assertNotNull(tabNavigator, 'TabNavigator should be initialized');
             testFramework.assertNotNull(dataManager, 'DataManager should be initialized');
             testFramework.assertNotNull(summaryGenerator, 'SummaryGenerator should be initialized');
-            testFramework.assertNotNull(viewModeManager, 'ViewModeManager should be initialized');
-            testFramework.assertNotNull(sessionHealthManager, 'SessionHealthManager should be initialized');
         });
 
         testFramework.test('Technique Library Loads (50 techniques)', () => {
@@ -5446,22 +5146,8 @@
             testFramework.assertNotNull(summaryGenerator.identifyGaps, 'Identify gaps method exists');
         });
 
-        testFramework.test('View Mode Manager Works', () => {
-            testFramework.assertNotNull(viewModeManager.setMode, 'SetMode method exists');
-            testFramework.assertNotNull(viewModeManager.getMode, 'GetMode method exists');
-            testFramework.assertEqual(viewModeManager.getMode(), 'edit', 'Default should be edit mode');
-        });
-
-        testFramework.test('Session Health Manager Works', () => {
-            testFramework.assertNotNull(sessionHealthManager, 'SessionHealthManager should be initialized');
-            testFramework.assertNotNull(sessionHealthManager.increment, 'Increment method exists');
-            testFramework.assertNotNull(sessionHealthManager.reset, 'Reset method exists');
-            testFramework.assertNotNull(sessionHealthManager.getCount, 'GetCount method exists');
-            testFramework.assert(typeof sessionHealthManager.getCount() === 'number', 'Count should be a number');
-        });
-
         // Global manager variables
-        let stateManager, tabNavigator, dataManager, summaryGenerator, viewModeManager, sessionHealthManager;
+        let stateManager, tabNavigator, dataManager, summaryGenerator;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', () => {
@@ -5469,13 +5155,9 @@
             tabNavigator = new TabNavigator();
             dataManager = new DataManager(stateManager);
             summaryGenerator = new SummaryGenerator(stateManager);
-            viewModeManager = new ViewModeManager();
-            sessionHealthManager = new SessionHealthManager();
 
             // Make managers globally accessible
-            window.viewModeManager = viewModeManager;
             window.dataManager = dataManager;
-            window.sessionHealthManager = sessionHealthManager;
 
             // Set default engagement date
             document.getElementById('engagementDate').value = new Date().toISOString().split('T')[0];

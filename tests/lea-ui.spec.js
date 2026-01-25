@@ -31,11 +31,11 @@ test.describe('LEA UI Tests', () => {
     await page.waitForSelector('div:has-text("LEA Regression Tests")');
 
     // Check for success text
-    const successText = await page.locator('text=11 tests');
+    const successText = await page.locator('text=9 tests');
     await expect(successText).toBeVisible();
 
-    // Verify all 11 passed
-    const passedText = await page.locator('text=Passed: 11');
+    // Verify all 9 passed
+    const passedText = await page.locator('text=Passed: 9');
     await expect(passedText).toBeVisible();
 
     // Verify no failures
@@ -70,7 +70,6 @@ test.describe('Export Functionality Tests', () => {
 
     // Add some test data first
     await page.fill('#clientName', 'Test Client');
-    await page.fill('#coachName', 'Test Coach');
 
     // Wait for data to be saved
     await page.waitForTimeout(500);
@@ -130,7 +129,6 @@ test.describe('Export Functionality Tests', () => {
 
     // Add test data
     await page.fill('#clientName', 'Test Export Client');
-    await page.fill('#coachName', 'Test Coach');
 
     // Wait for data to be saved to localStorage
     await page.waitForTimeout(500);
@@ -154,8 +152,6 @@ test.describe('Export Functionality Tests', () => {
     // Verify structure
     expect(exportedData.version).toBe('2.0');
     expect(exportedData.metadata.clientName).toBe('Test Export Client');
-    // Note: coach field is stored as 'coach' not 'coachName' in metadata
-    expect(exportedData.metadata.coach).toBe('Test Coach');
     expect(Array.isArray(exportedData.questions)).toBe(true);
     expect(exportedData.questions.length).toBeGreaterThan(0);
     expect(exportedData.hasAnalysis).toBe(true);
@@ -177,13 +173,11 @@ test.describe('Import Functionality Tests', () => {
     await page.waitForLoadState('domcontentloaded');
 
     // Create a test JSON file with v2.0 format
-    // Note: The app stores coach name as 'coach' not 'coachName' in metadata
     const testData = {
       version: '2.0',
       exportDate: new Date().toISOString(),
       metadata: {
         clientName: 'Imported Client',
-        coach: 'Imported Coach',
         engagementDate: '2025-01-01'
       },
       questions: [
@@ -223,14 +217,8 @@ test.describe('Import Functionality Tests', () => {
     await expect(notification).toBeVisible({ timeout: 5000 });
 
     // Verify the data was imported by checking the client name
-    // Note: Fields might be disabled due to view mode after import
     const clientNameInput = page.locator('#clientName');
     await expect(clientNameInput).toHaveValue('Imported Client');
-
-    // Check if the coach name input has the value (even if disabled)
-    const coachNameInput = page.locator('#coachName');
-    const coachNameValue = await coachNameInput.inputValue();
-    expect(coachNameValue).toBe('Imported Coach');
 
     // Clean up test file
     fs.unlinkSync(testFilePath);
@@ -241,13 +229,11 @@ test.describe('Import Functionality Tests', () => {
     await page.waitForLoadState('domcontentloaded');
 
     // Create a test JSON file
-    // Note: The app stores coach name as 'coach' not 'coachName' in metadata
     const testData = {
       version: '2.0',
       exportDate: new Date().toISOString(),
       metadata: {
         clientName: 'Button Click Test',
-        coach: 'Test Coach',
         engagementDate: '2025-01-05'
       },
       questions: [],
@@ -313,12 +299,10 @@ test.describe('Import Functionality Tests', () => {
     await page.waitForLoadState('domcontentloaded');
 
     // Create a test JSON file with v1.0 format
-    // Note: The app stores coach name as 'coach' not 'coachName' in metadata
     const testData = {
       version: '1.0',
       metadata: {
         clientName: 'V1 Client',
-        coach: 'V1 Coach',
         engagementDate: '2025-01-01'
       },
       questions: [
@@ -363,10 +347,8 @@ test.describe('Export and Import Round-trip Tests', () => {
 
     // Set up initial data
     const originalClientName = 'Round-trip Test Client';
-    const originalCoachName = 'Round-trip Coach';
 
     await page.fill('#clientName', originalClientName);
-    await page.fill('#coachName', originalCoachName);
 
     // Wait for data to be saved
     await page.waitForTimeout(500);
@@ -423,7 +405,6 @@ test.describe('Export and Import Round-trip Tests', () => {
 
     // Verify the data was restored correctly
     await expect(page.locator('#clientName')).toHaveValue(originalClientName);
-    await expect(page.locator('#coachName')).toHaveValue(originalCoachName);
 
     // Check for success notification
     const notification = page.locator('text=imported successfully');
@@ -476,7 +457,6 @@ test.describe('Markdown Import Tests', () => {
 
     // Verify metadata was imported
     await expect(page.locator('#clientName')).toHaveValue('Test Project Alpha');
-    await expect(page.locator('#coachName')).toHaveValue('John Smith');
 
     // Check for success notification
     const notification = page.locator('text=Markdown imported successfully');
@@ -575,7 +555,6 @@ test.describe('Summary Generation Tests', () => {
       metadata: {
         clientName: "Acme Corp",
         engagementDate: "2026-01-25",
-        coach: "Test Coach",
         lastModified: new Date().toISOString()
       },
       questions: [
@@ -649,7 +628,6 @@ test.describe('Summary Generation Tests', () => {
       metadata: {
         clientName: "Test Client",
         engagementDate: "2026-01-25",
-        coach: "Coach",
         lastModified: new Date().toISOString()
       },
       questions: [

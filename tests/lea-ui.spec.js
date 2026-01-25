@@ -433,3 +433,132 @@ test.describe('Export and Import Round-trip Tests', () => {
     fs.unlinkSync(testFilePath);
   });
 });
+
+test.describe('Markdown Import Tests', () => {
+  test('should import markdown file with discovery findings', async ({ page }) => {
+    await page.goto('/index.html');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Create a test markdown file
+    const markdownContent = `# AHR Discovery Session Analysis
+
+**Date**: January 24, 2026
+**Project**: Test Project Alpha
+**Participants**: John Smith (Product Manager), Jane Doe (Engineer)
+
+## Questions Covered
+
+✅ **Q1: Why does this product exist?**
+- To solve critical customer pain points
+- Interview with stakeholders confirmed the need
+
+⚠️ **Q2: Who actually experiences the problem we are solving?**
+- Enterprise customers in the healthcare sector
+- Need more data on specific user personas
+
+❌ **Q3: How do we know this problem is worth solving now?**
+- Not directly discussed in workshop
+- Missing market analysis data
+`;
+
+    const testFilePath = path.join(__dirname, 'test-markdown.md');
+    fs.writeFileSync(testFilePath, markdownContent);
+
+    // Set up dialog handler
+    page.on('dialog', dialog => dialog.accept());
+
+    // Import the markdown file
+    const fileInput = page.locator('#importInput');
+    await fileInput.setInputFiles(testFilePath);
+
+    // Wait for import to complete
+    await page.waitForTimeout(1000);
+
+    // Verify metadata was imported
+    await expect(page.locator('#clientName')).toHaveValue('Test Project Alpha');
+    await expect(page.locator('#coachName')).toHaveValue('John Smith');
+
+    // Check for success notification
+    const notification = page.locator('text=Markdown imported successfully');
+    await expect(notification).toBeVisible({ timeout: 5000 });
+
+    // Verify question data was imported by checking the state
+    const questionData = await page.evaluate(() => {
+      const state = window.dataManager.stateManager.getState();
+      return {
+        q1: state.questions.q1,
+        q2: state.questions.q2,
+        q3: state.questions.q3
+      };
+    });
+
+    // Q1 should be answered with findings
+    expect(questionData.q1.status).toBe('answered');
+    expect(questionData.q1.findings).toContain('critical customer pain points');
+    expect(questionData.q1.discoveryMethods).toContain('interview');
+
+    // Q2 should be answered (partial)
+    expect(questionData.q2.status).toBe('answered');
+    expect(questionData.q2.findings).toContain('Enterprise customers');
+
+    // Q3 should be open
+    expect(questionData.q3.status).toBe('open');
+
+    // Clean up test file
+    fs.unlinkSync(testFilePath);
+  });
+
+  test('should accept .md files in import input', async ({ page }) => {
+    await page.goto('/index.html');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Check that the import input accepts .md files
+    const acceptAttr = await page.locator('#importInput').getAttribute('accept');
+    expect(acceptAttr).toContain('.md');
+    expect(acceptAttr).toContain('.json');
+  });
+
+  test('should auto-detect discovery methods from findings text', async ({ page }) => {
+    await page.goto('/index.html');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Create markdown with discovery method keywords
+    const markdownContent = `# Test Discovery
+
+**Date**: January 25, 2026
+**Project**: Method Detection Test
+**Participants**: Tester
+
+✅ **Q1: Why does this product exist?**
+- Confirmed through user interviews and surveys
+- Data analysis showed clear patterns
+- Observed users during workshop sessions
+- Documentation review completed
+`;
+
+    const testFilePath = path.join(__dirname, 'test-methods.md');
+    fs.writeFileSync(testFilePath, markdownContent);
+
+    page.on('dialog', dialog => dialog.accept());
+
+    const fileInput = page.locator('#importInput');
+    await fileInput.setInputFiles(testFilePath);
+
+    await page.waitForTimeout(1000);
+
+    // Verify discovery methods were auto-detected
+    const methods = await page.evaluate(() => {
+      const state = window.dataManager.stateManager.getState();
+      return state.questions.q1.discoveryMethods;
+    });
+
+    expect(methods).toContain('interview');
+    expect(methods).toContain('survey');
+    expect(methods).toContain('data_analysis');
+    expect(methods).toContain('observation');
+    expect(methods).toContain('workshop');
+    expect(methods).toContain('document_review');
+
+    fs.unlinkSync(testFilePath);
+  });
+});

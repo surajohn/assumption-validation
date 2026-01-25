@@ -1924,8 +1924,8 @@
             </div>
         </div>
 
-        <!-- Hidden file input for JSON import -->
-        <input type="file" id="importInput" accept=".json" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <!-- Hidden file input for JSON/Markdown import -->
+        <input type="file" id="importInput" accept=".json,.md" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <input type="file" id="compareInput" accept=".json" multiple style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 
         <!-- Notifications container -->
@@ -2779,7 +2779,13 @@
                 document.getElementById('importInput').addEventListener('change', (e) => {
                     console.log('File selected:', e.target.files[0]?.name);
                     if (e.target.files && e.target.files[0]) {
-                        this.importFromJSON(e.target.files[0]);
+                        const file = e.target.files[0];
+                        const fileName = file.name.toLowerCase();
+                        if (fileName.endsWith('.md')) {
+                            this.importFromMarkdown(file);
+                        } else {
+                            this.importFromJSON(file);
+                        }
                     } else {
                         console.error('No file selected');
                     }
@@ -3169,6 +3175,187 @@
                 reader.readAsText(file);
                 // Reset file input
                 document.getElementById('importInput').value = '';
+            }
+
+            importFromMarkdown(file) {
+                if (!file) {
+                    console.error('No file provided to importFromMarkdown');
+                    return;
+                }
+
+                console.log('Starting markdown import of file:', file.name);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        console.log('Markdown file read successfully, parsing...');
+                        const markdown = e.target.result;
+                        const parsedData = this.parseMarkdownToState(markdown);
+                        console.log('Markdown parsed successfully:', parsedData);
+
+                        console.log('Calling setState...');
+                        this.stateManager.setState(parsedData);
+                        console.log('setState completed');
+
+                        this.showNotification('Markdown imported successfully - Switched to View Mode', 'success');
+
+                        // Switch to view mode after import
+                        if (window.viewModeManager) {
+                            setTimeout(() => {
+                                window.viewModeManager.setMode(true);
+                            }, 100);
+                        }
+
+                    } catch (error) {
+                        console.error('Markdown import error:', error);
+                        this.showNotification('Error importing markdown: ' + error.message, 'error');
+                    }
+                };
+
+                reader.onerror = () => {
+                    this.showNotification('Error reading markdown file', 'error');
+                };
+
+                reader.readAsText(file);
+                // Reset file input
+                document.getElementById('importInput').value = '';
+            }
+
+            parseMarkdownToState(markdown) {
+                // Initialize state from current state manager structure
+                const newState = this.stateManager.initializeState();
+                const now = new Date().toISOString();
+
+                // Question number to ID mapping
+                const questionMap = {
+                    1: 'q1', 2: 'q2', 3: 'q3', 4: 'q4', 5: 'q5', 6: 'q6', 7: 'q7', 8: 'q8',
+                    9: 'q9', 10: 'q10', 11: 'q11', 12: 'q12', 13: 'q13', 14: 'q14', 15: 'q15',
+                    16: 'q16', 17: 'q17', 18: 'q18', 19: 'q19', 20: 'q20', 21: 'q21',
+                    22: 'q22', 23: 'q23', 24: 'q24', 25: 'q25', 26: 'q26', 27: 'q27',
+                    28: 'q28', 29: 'q29', 30: 'q30', 31: 'q31', 32: 'q32', 33: 'q33',
+                    34: 'q34', 35: 'q35', 36: 'q36'
+                };
+
+                // Parse metadata from header
+                const dateMatch = markdown.match(/\*\*Date\*\*:\s*(.+)/i);
+                const projectMatch = markdown.match(/\*\*Project\*\*:\s*(.+)/i);
+                const participantsMatch = markdown.match(/\*\*Participants?\*\*:\s*(.+)/i);
+
+                if (dateMatch) {
+                    // Try to parse date into YYYY-MM-DD format
+                    const dateStr = dateMatch[1].trim();
+                    const parsedDate = new Date(dateStr);
+                    if (!isNaN(parsedDate.getTime())) {
+                        newState.metadata.engagementDate = parsedDate.toISOString().split('T')[0];
+                    } else {
+                        newState.metadata.engagementDate = dateStr;
+                    }
+                }
+
+                if (projectMatch) {
+                    newState.metadata.clientName = projectMatch[1].trim();
+                }
+
+                if (participantsMatch) {
+                    // Extract first name (before parentheses or comma)
+                    const participants = participantsMatch[1].trim();
+                    const firstParticipant = participants.split(/[,(]/)[0].trim();
+                    newState.metadata.coach = firstParticipant;
+                }
+
+                newState.metadata.lastModified = now;
+
+                // Parse question sections
+                // Match patterns like: ✅ **Q1: or ⚠️ **Q3: or ❌ **Q6:
+                // Also handle variations: check mark, warning, x mark emojis
+                const questionPattern = /([✅⚠️❌✓⚡❗✔️☑️☐☒✘✗])\s*\*\*Q(\d+)[:\s]/gi;
+                const lines = markdown.split('\n');
+
+                let currentQuestionNum = null;
+                let currentStatus = null;
+                let currentFindings = [];
+
+                const saveCurrentQuestion = () => {
+                    if (currentQuestionNum !== null && questionMap[currentQuestionNum]) {
+                        const qId = questionMap[currentQuestionNum];
+                        if (newState.questions[qId]) {
+                            const findingsText = currentFindings.join('\n').trim();
+                            newState.questions[qId].findings = findingsText;
+                            newState.questions[qId].status = currentStatus;
+                            newState.questions[qId].lastUpdated = now;
+
+                            // Auto-detect discovery methods from findings text
+                            newState.questions[qId].discoveryMethods = this.detectDiscoveryMethods(findingsText);
+                        }
+                    }
+                };
+
+                for (const line of lines) {
+                    // Check if this line starts a new question
+                    // Use a more permissive regex that captures the prefix before **Q
+                    const questionMatch = line.match(/^(.+?)\s*\*\*Q(\d+)[:\s]/i);
+
+                    if (questionMatch) {
+                        // Save previous question if exists
+                        saveCurrentQuestion();
+
+                        // Start new question
+                        const statusPrefix = questionMatch[1];
+                        currentQuestionNum = parseInt(questionMatch[2]);
+                        currentFindings = [];
+
+                        // Determine status from prefix using regex tests (handles emoji variations)
+                        if (/[✅✓✔☑]/.test(statusPrefix)) {
+                            currentStatus = 'answered';
+                        } else if (/[⚠⚡❗🟡🟠]/.test(statusPrefix)) {
+                            currentStatus = 'answered'; // Partial still has findings
+                        } else if (/[❌✘✗☐☒🔴]/.test(statusPrefix)) {
+                            currentStatus = 'open';
+                        } else {
+                            // Default to open if we can't determine status
+                            currentStatus = 'open';
+                        }
+                    } else if (currentQuestionNum !== null) {
+                        // Check if this is a finding bullet point
+                        const bulletMatch = line.match(/^\s*[-*•]\s*(.+)/);
+                        if (bulletMatch) {
+                            const finding = bulletMatch[1].trim();
+                            if (finding) {
+                                currentFindings.push(finding);
+                            }
+                        }
+                    }
+                }
+
+                // Save last question
+                saveCurrentQuestion();
+
+                return newState;
+            }
+
+            detectDiscoveryMethods(text) {
+                const methods = [];
+                const textLower = text.toLowerCase();
+
+                if (/\binterview(s|ed|ing)?\b/.test(textLower)) {
+                    methods.push('interview');
+                }
+                if (/\bworkshop(s)?\b/.test(textLower)) {
+                    methods.push('workshop');
+                }
+                if (/\bobserv(e|ed|ation|ing)\b/.test(textLower)) {
+                    methods.push('observation');
+                }
+                if (/\bdocument(s|ation)?\b|\bdocs?\b/.test(textLower)) {
+                    methods.push('document_review');
+                }
+                if (/\bsurvey(s|ed)?\b/.test(textLower)) {
+                    methods.push('survey');
+                }
+                if (/\b(data|metric|analytics|analysis)\b/.test(textLower)) {
+                    methods.push('data_analysis');
+                }
+
+                return methods;
             }
 
             async compareAssessments(files) {

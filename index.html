@@ -4450,9 +4450,13 @@
              * Score and rank techniques based on findings
              */
             scoreAndRankTechniques(techniques, allFindings, state) {
+                const clientName = state.metadata?.clientName || 'your team';
+
                 const scoredTechniques = techniques.map(technique => {
                     let score = 0;
                     const matchReasons = [];
+                    const matchedKeywords = [];
+                    const matchedPatterns = [];
 
                     // Match using the new matching_criteria
                     if (technique.matching_criteria) {
@@ -4460,7 +4464,7 @@
                         technique.matching_criteria.keywords.forEach(keyword => {
                             if (allFindings.toLowerCase().includes(keyword.toLowerCase())) {
                                 score += 10;
-                                matchReasons.push(`Detected: "${keyword}"`);
+                                matchedKeywords.push(keyword);
                             }
                         });
 
@@ -4468,7 +4472,7 @@
                         technique.matching_criteria.discovery_patterns.forEach(pattern => {
                             if (allFindings.toLowerCase().includes(pattern.toLowerCase())) {
                                 score += 15;
-                                matchReasons.push(`Discovery findings align with: "${pattern}"`);
+                                matchedPatterns.push(pattern);
                             }
                         });
 
@@ -4483,8 +4487,21 @@
                     // When to use matching
                     const whenToUseMatch = this.matchWhenToUse(allFindings, technique.when_to_use);
                     score += whenToUseMatch.score;
-                    if (whenToUseMatch.reason) {
-                        matchReasons.push(whenToUseMatch.reason);
+
+                    // Generate client-contextualized benefit statement
+                    if (matchedKeywords.length > 0 || matchedPatterns.length > 0) {
+                        const benefitStatement = this.generateClientBenefit(
+                            technique,
+                            matchedKeywords,
+                            matchedPatterns,
+                            clientName
+                        );
+                        matchReasons.unshift(benefitStatement);
+                    }
+
+                    // Add a summary of what was detected
+                    if (matchedKeywords.length > 0) {
+                        matchReasons.push(`Detected in your findings: ${matchedKeywords.slice(0, 3).join(', ')}`);
                     }
 
                     return {
@@ -4498,6 +4515,59 @@
                 return scoredTechniques
                     .filter(t => t.score > 0)
                     .sort((a, b) => b.score - a.score);
+            }
+
+            /**
+             * Generate a client-contextualized benefit statement for a technique
+             */
+            generateClientBenefit(technique, matchedKeywords, matchedPatterns, clientName) {
+                const outcomes = technique.outcomes || [];
+                const primaryOutcome = outcomes[0] || '';
+                const secondaryOutcome = outcomes[1] || '';
+
+                // Build context-aware benefit statements based on technique category and matches
+                const benefitTemplates = {
+                    'assumption_testing': `${clientName} has untested assumptions that could derail the product. This technique will help systematically identify and validate these assumptions, reducing risk and ensuring evidence-based decisions.`,
+                    'user_interviews': `Your discovery reveals the need to understand user perspectives better. Conducting structured interviews will uncover ${clientName}'s users' real needs, pain points, and motivations.`,
+                    'prototype_testing': `${clientName} needs to validate solutions before building. Prototyping will let you test ideas quickly with real users and iterate based on feedback.`,
+                    'opportunity_assessment': `${clientName} should evaluate whether this opportunity is worth pursuing. This framework will clarify the business objective, success metrics, and validate the customer problem.`,
+                    'team_objective': `${clientName} needs clearer alignment on goals. This technique shifts focus from features to outcomes, ensuring the team knows what problem they're solving and how to measure success.`,
+                    'continuous_discovery': `${clientName} would benefit from ongoing customer engagement. Weekly touchpoints with customers will keep the team grounded in real user needs throughout development.`,
+                    'story_mapping': `${clientName} needs to visualize the user journey. Story mapping will help prioritize work based on user value and identify gaps in the experience.`,
+                    'jobs_to_be_done': `Understanding the jobs ${clientName}'s users are trying to accomplish will reveal unmet needs and opportunities for differentiation.`,
+                    'usability_testing': `${clientName} should validate that solutions are actually usable. Testing with real users will uncover friction points before launch.`,
+                    'a_b_testing': `${clientName} can use data to make decisions. A/B testing will provide evidence for which approaches work best with your users.`,
+                    'lean_canvas': `${clientName} has multiple assumptions to track. The Lean Canvas will map all hypotheses and surface what needs testing first.`,
+                    'pr_faq': `${clientName} should work backwards from the desired customer outcome. Writing a PR/FAQ forces clarity on the value proposition and customer benefits.`,
+                    'heart_metrics': `${clientName} needs a framework for measuring product success. HEART metrics will establish comprehensive KPIs across happiness, engagement, adoption, retention, and task success.`,
+                    'data_mining': `${clientName} has existing data that can reveal insights. Analyzing behavioral patterns will uncover what users actually do vs. what they say.`,
+                    'concierge_test': `${clientName} can validate demand before building. Manually delivering the service first will prove whether customers actually want and will pay for the solution.`,
+                    'wizard_of_oz': `${clientName} can test the experience without building the technology. Simulating the backend manually lets you validate the user experience first.`,
+                    'stakeholder_mapping': `${clientName} has multiple stakeholders to manage. Mapping their interests and influence will help navigate organizational dynamics.`,
+                    'reference_customers': `${clientName} needs early adopters to validate and champion the product. Identifying and nurturing reference customers will accelerate adoption.`
+                };
+
+                // Check if we have a specific template for this technique
+                if (benefitTemplates[technique.id]) {
+                    return benefitTemplates[technique.id];
+                }
+
+                // Generate a generic but still contextual benefit statement
+                let benefit = `Based on ${clientName}'s discovery findings, `;
+
+                if (matchedPatterns.length > 0) {
+                    benefit += `the identified pattern "${matchedPatterns[0]}" suggests this technique will help. `;
+                }
+
+                if (primaryOutcome) {
+                    benefit += `Expected outcome: ${primaryOutcome}.`;
+                }
+
+                if (secondaryOutcome && benefit.length < 200) {
+                    benefit += ` Additionally: ${secondaryOutcome}.`;
+                }
+
+                return benefit;
             }
 
             /**

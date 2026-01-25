@@ -5116,6 +5116,10 @@
                 this.applyMode();
             }
 
+            getMode() {
+                return this.isViewMode ? 'view' : 'edit';
+            }
+
             updateModeUI() {
                 const toggleBtn = document.getElementById('toggleModeBtn');
 

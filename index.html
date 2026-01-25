@@ -2514,21 +2514,18 @@
             }
 
             applyTechniqueFilters() {
-                // Get active filter values
-                const timeFilter = document.querySelector('.filter-btn[data-filter-type="time"].active')?.dataset.filterValue || 'all';
+                // Get active filter value
                 const maturityFilter = document.querySelector('.filter-btn[data-filter-type="maturity"].active')?.dataset.filterValue || 'all';
 
                 // Apply filters to all technique cards
-                const techniqueCards = document.querySelectorAll('.technique-card[data-time]');
+                const techniqueCards = document.querySelectorAll('.technique-card[data-maturity]');
                 techniqueCards.forEach(card => {
-                    const cardTime = card.dataset.time;
                     const cardMaturity = card.dataset.maturity;
 
-                    const timeMatch = timeFilter === 'all' || cardTime === timeFilter;
                     const maturityMatch = maturityFilter === 'all' || cardMaturity === maturityFilter;
 
                     // Show/hide based on filter match
-                    if (timeMatch && maturityMatch) {
+                    if (maturityMatch) {
                         card.removeAttribute('data-filtered');
                     } else {
                         card.setAttribute('data-filtered', 'true');
@@ -4861,13 +4858,6 @@
                         ${summary.discoveryTechniques && summary.discoveryTechniques.length > 0 ? `
                             <div class="technique-filters">
                                 <div class="filter-group">
-                                    <label class="filter-label">Time:</label>
-                                    <button class="filter-btn active" data-filter-type="time" data-filter-value="all">All</button>
-                                    <button class="filter-btn" data-filter-type="time" data-filter-value="hours">Hours</button>
-                                    <button class="filter-btn" data-filter-type="time" data-filter-value="days">Days</button>
-                                    <button class="filter-btn" data-filter-type="time" data-filter-value="weeks">Weeks+</button>
-                                </div>
-                                <div class="filter-group">
                                     <label class="filter-label">Maturity:</label>
                                     <button class="filter-btn active" data-filter-type="maturity" data-filter-value="all">All</button>
                                     <button class="filter-btn" data-filter-type="maturity" data-filter-value="beginner">Beginner</button>
@@ -4880,16 +4870,13 @@
                                     const technique = rec.technique;
                                     const categorySlug = technique.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
-                                    // Determine time category
-                                    const timeCategory = technique.time_commitment.toLowerCase().includes('hour') ? 'hours' :
-                                                        technique.time_commitment.toLowerCase().includes('day') ? 'days' : 'weeks';
 
                                     // Determine maturity level
                                     const maturityLevel = technique.team_maturity.some(m => m.toLowerCase().includes('beginner')) ? 'beginner' :
                                                          technique.team_maturity.some(m => m.toLowerCase().includes('advanced')) ? 'advanced' : 'intermediate';
 
                                     return `
-                                        <div class="technique-card" data-collapsed="false" data-time="${timeCategory}" data-maturity="${maturityLevel}">
+                                        <div class="technique-card" data-collapsed="false" data-maturity="${maturityLevel}">
                                             <div class="technique-header">
                                                 <div class="header-left">
                                                     <h4>${index + 1}. ${technique.name}</h4>
@@ -4918,16 +4905,17 @@
                                                     <span class="meta-value">${technique.when_to_use}</span>
                                                 </div>
                                                 <div class="meta-item">
-                                                    <span class="meta-label">Time commitment:</span>
-                                                    <span class="meta-value">${technique.time_commitment}</span>
-                                                </div>
-                                                <div class="meta-item">
                                                     <span class="meta-label">Resources needed:</span>
                                                     <span class="meta-value">${technique.resources_needed.join(', ')}</span>
                                                 </div>
                                                 <div class="meta-item">
                                                     <span class="meta-label">Team maturity:</span>
-                                                    <span class="meta-value">${technique.team_maturity.join(', ')}</span>
+                                                    <span class="meta-value">${technique.team_maturity.map(level => {
+                                                        if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
+                                                        if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
+                                                        if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
+                                                        return level;
+                                                    }).join(', ')}</span>
                                                 </div>
                                             </div>
 
@@ -4982,16 +4970,17 @@
                                                     <span class="meta-value">${technique.when_to_use}</span>
                                                 </div>
                                                 <div class="meta-item">
-                                                    <span class="meta-label">Time commitment:</span>
-                                                    <span class="meta-value">${technique.time_commitment}</span>
-                                                </div>
-                                                <div class="meta-item">
                                                     <span class="meta-label">Resources needed:</span>
                                                     <span class="meta-value">${technique.resources_needed.join(', ')}</span>
                                                 </div>
                                                 <div class="meta-item">
                                                     <span class="meta-label">Team maturity:</span>
-                                                    <span class="meta-value">${technique.team_maturity.join(', ')}</span>
+                                                    <span class="meta-value">${technique.team_maturity.map(level => {
+                                                        if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
+                                                        if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
+                                                        if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
+                                                        return level;
+                                                    }).join(', ')}</span>
                                                 </div>
                                             </div>
 

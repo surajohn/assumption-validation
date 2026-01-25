@@ -562,3 +562,130 @@ test.describe('Markdown Import Tests', () => {
     fs.unlinkSync(testFilePath);
   });
 });
+
+test.describe('Summary Generation Tests', () => {
+  test('should generate summary with client-contextualized technique benefits', async ({ page }) => {
+    await page.goto('/index.html');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Create test data with client name and findings that trigger technique recommendations
+    const testData = {
+      version: "2.0",
+      exportDate: new Date().toISOString(),
+      metadata: {
+        clientName: "Acme Corp",
+        engagementDate: "2026-01-25",
+        coach: "Test Coach",
+        lastModified: new Date().toISOString()
+      },
+      questions: [
+        {
+          questionId: "q1",
+          phase: 1,
+          text: "Why does this product exist?",
+          findings: "We have many assumptions about user needs that need to be validated. The team needs to test these hypotheses before building.",
+          status: "answered",
+          discoveryMethods: ["interview"],
+          notes: "",
+          lastUpdated: new Date().toISOString()
+        },
+        {
+          questionId: "q2",
+          phase: 1,
+          text: "Who experiences the problem?",
+          findings: "Users struggle with the current workflow. We need to understand their jobs to be done better.",
+          status: "answered",
+          discoveryMethods: ["observation"],
+          notes: "",
+          lastUpdated: new Date().toISOString()
+        }
+      ]
+    };
+
+    const testFilePath = path.join(__dirname, 'test-summary.json');
+    fs.writeFileSync(testFilePath, JSON.stringify(testData, null, 2));
+
+    // Set up dialog handler
+    page.on('dialog', dialog => dialog.accept());
+
+    // Import the test data
+    const fileInput = page.locator('#importInput');
+    await fileInput.setInputFiles(testFilePath);
+
+    // Wait for import to complete
+    await page.waitForTimeout(1000);
+
+    // Navigate to Summary tab
+    await page.click('.tab-btn[data-phase="summary"]');
+    await page.waitForTimeout(500);
+
+    // Click Generate Summary button
+    await page.click('#generateSummary');
+
+    // Wait for summary to generate
+    await page.waitForTimeout(2000);
+
+    // Check that client name appears in technique recommendations
+    const summaryContent = await page.locator('#summaryContent').textContent();
+
+    // Verify client name is used in contextualized benefits
+    expect(summaryContent).toContain('Acme Corp');
+
+    // Verify technique recommendations are generated
+    expect(summaryContent).toContain('Recommended Discovery Techniques');
+
+    // Clean up
+    fs.unlinkSync(testFilePath);
+  });
+
+  test('should show maturity levels with descriptions', async ({ page }) => {
+    await page.goto('/index.html');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Create minimal test data
+    const testData = {
+      version: "2.0",
+      exportDate: new Date().toISOString(),
+      metadata: {
+        clientName: "Test Client",
+        engagementDate: "2026-01-25",
+        coach: "Coach",
+        lastModified: new Date().toISOString()
+      },
+      questions: [
+        {
+          questionId: "q1",
+          phase: 1,
+          text: "Test question",
+          findings: "We need to validate assumptions and test hypotheses with users.",
+          status: "answered",
+          discoveryMethods: [],
+          notes: "",
+          lastUpdated: new Date().toISOString()
+        }
+      ]
+    };
+
+    const testFilePath = path.join(__dirname, 'test-maturity.json');
+    fs.writeFileSync(testFilePath, JSON.stringify(testData, null, 2));
+
+    page.on('dialog', dialog => dialog.accept());
+
+    const fileInput = page.locator('#importInput');
+    await fileInput.setInputFiles(testFilePath);
+    await page.waitForTimeout(1000);
+
+    // Navigate to Summary and generate
+    await page.click('.tab-btn[data-phase="summary"]');
+    await page.waitForTimeout(500);
+    await page.click('#generateSummary');
+    await page.waitForTimeout(2000);
+
+    const summaryContent = await page.locator('#summaryContent').textContent();
+
+    // Verify maturity descriptions are shown
+    expect(summaryContent).toMatch(/Beginner.*Teams new to product discovery|Intermediate.*Teams with some discovery experience|Advanced.*Experienced teams with mature practices/);
+
+    fs.unlinkSync(testFilePath);
+  });
+});

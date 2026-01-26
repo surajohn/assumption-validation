@@ -9,7 +9,6 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
     <!-- jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
     <style>
         * {
@@ -1757,7 +1756,6 @@
                 <button id="importBtn" class="btn-secondary">Import</button>
                 <button id="compareBtn" class="btn-secondary">Compare Assessments</button>
                 <button id="exportBtn" class="btn-secondary">Export JSON</button>
-                <button id="exportPdfBtn" class="btn-secondary">Export PDF</button>
                 <button id="runTestsBtn" class="btn-secondary">Run Tests</button>
             </div>
         </div>
@@ -2666,10 +2664,6 @@
                     this.exportToJSON();
                 });
 
-                document.getElementById('exportPdfBtn').addEventListener('click', () => {
-                    this.exportToPDF();
-                });
-
                 document.getElementById('compareBtn').addEventListener('click', () => {
                     document.getElementById('compareInput').click();
                 });
@@ -2840,72 +2834,6 @@
                 window.URL.revokeObjectURL(url);
 
                 this.showNotification('Enhanced discovery data (v2.0) exported successfully', 'success');
-            }
-
-            async exportToPDF() {
-                try {
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF();
-
-                    const state = this.stateManager.getState();
-                    const coverage = this.stateManager.calculateCoverage();
-
-                    // Title
-                    doc.setFontSize(20);
-                    doc.text('Discovery Assessment Report', 20, 20);
-
-                    // Metadata
-                    doc.setFontSize(12);
-                    doc.text(`Client: ${state.metadata.clientName || 'N/A'}`, 20, 35);
-                    doc.text(`Date: ${state.metadata.engagementDate || 'N/A'}`, 20, 42);
-
-                    // Coverage
-                    doc.setFontSize(14);
-                    doc.text('Overall Coverage', 20, 52);
-                    doc.setFontSize(11);
-                    doc.text(`${coverage.answeredCount}/${coverage.totalCount} questions answered (${coverage.overall.toFixed(1)}%)`, 20, 60);
-
-                    let yPos = 72;
-
-                    // Key Findings
-                    doc.setFontSize(14);
-                    doc.text('Key Findings', 20, yPos);
-                    yPos += 10;
-                    doc.setFontSize(10);
-
-                    Object.entries(state.questions).forEach(([qId, q]) => {
-                        if (q.findings && q.findings.trim()) {
-                            const questionText = Object.values(discoveryQuestions)
-                                .flatMap(p => p.questions)
-                                .find(quest => quest.id === qId)?.text || qId;
-
-                            // Check if we need a new page
-                            if (yPos > 270) {
-                                doc.addPage();
-                                yPos = 20;
-                            }
-
-                            doc.setFont(undefined, 'bold');
-                            const wrappedQuestion = doc.splitTextToSize(questionText, 170);
-                            doc.text(wrappedQuestion, 20, yPos);
-                            yPos += wrappedQuestion.length * 5 + 3;
-
-                            doc.setFont(undefined, 'normal');
-                            const wrappedFindings = doc.splitTextToSize(q.findings.substring(0, 200), 170);
-                            doc.text(wrappedFindings, 20, yPos);
-                            yPos += wrappedFindings.length * 5 + 8;
-                        }
-                    });
-
-                    // Save PDF
-                    const fileName = `discovery-assessment-${state.metadata.clientName || 'export'}-${new Date().toISOString().split('T')[0]}.pdf`;
-                    doc.save(fileName);
-
-                    this.showNotification('PDF exported successfully', 'success');
-                } catch (error) {
-                    console.error('PDF export error:', error);
-                    this.showNotification('Failed to export PDF: ' + error.message, 'error');
-                }
             }
 
             importFromJSON(file) {

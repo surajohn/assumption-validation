@@ -53,15 +53,12 @@ test.describe('LEA UI Tests', () => {
 });
 
 test.describe('Export Functionality Tests', () => {
-  test('should have export buttons visible', async ({ page }) => {
+  test('should have export button visible', async ({ page }) => {
     await page.goto('/index.html');
 
-    // Check that export buttons exist
+    // Check that export button exists
     const exportJsonBtn = await page.locator('#exportBtn');
-    const exportPdfBtn = await page.locator('#exportPdfBtn');
-
     await expect(exportJsonBtn).toBeVisible();
-    await expect(exportPdfBtn).toBeVisible();
   });
 
   test('should trigger export and generate valid data', async ({ page }) => {

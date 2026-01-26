@@ -2247,7 +2247,8 @@
                     { id: "q11", text: "Who decides when priorities collide?" },
                     { id: "q12", text: "How intentional the backlog really is?" },
                     { id: "q30", text: "Are key stakeholders aligned on the vision and priorities?" },
-                    { id: "q31", text: "How do decisions and learnings get shared across the org?" }
+                    { id: "q31", text: "How do decisions and learnings get shared across the org?" },
+                    { id: "q37", text: "Are there overlapping features or capabilities across products?" }
                 ]
             },
             phase4: {
@@ -2711,7 +2712,8 @@
                     'q9': ['build', 'technical', 'feasible', 'engineer', 'develop'],
                     'q15': ['constraint', 'limitation', 'requirement', 'must', 'compliance'],
                     'q16': ['assumption', 'believed', 'thought', 'expected', 'assumed'],
-                    'q17': ['assumption', 'validated', 'tested', 'proved', 'disproved']
+                    'q17': ['assumption', 'validated', 'tested', 'proved', 'disproved'],
+                    'q37': ['overlap', 'duplicate', 'taxonomy', 'portfolio', 'redundant', 'same feature', 'multiple products']
                 };
 
                 const textLower = text.toLowerCase();
@@ -3607,7 +3609,7 @@
             "library_version": "1.0",
             "last_updated": "2025-12-25",
             "source": "SVPG Masterclass December 2025 + SVPG Research",
-            "total_techniques": 50,
+            "total_techniques": 51,
 
             "discovery_techniques": {
 
@@ -3743,6 +3745,29 @@
                             "phase_indicators": [1, 5]
                         },
                         "svpg_source": "SVPG Masterclass 2025"
+                    },
+                    {
+                        "id": "product_taxonomy_mapping",
+                        "name": "Product Taxonomy Mapping",
+                        "category": "Framing & Planning",
+                        "description": "Workshop to visualize and map all product features across the portfolio to identify overlaps, gaps, and ownership boundaries.",
+                        "when_to_use": "When there's confusion about feature ownership, suspected duplication across products, or need to rationalize the product portfolio",
+                        "time_commitment": "Half-day workshop + 1-2 days follow-up analysis",
+                        "team_maturity": ["intermediate", "advanced"],
+                        "resources_needed": ["Product Managers from each product", "Architect or Tech Lead", "Whiteboard or Miro"],
+                        "outcomes": [
+                            "Visual map of all features across products",
+                            "Identified overlapping capabilities",
+                            "Clear ownership boundaries defined",
+                            "Deprecation or consolidation candidates",
+                            "Reduced user confusion from duplicate features"
+                        ],
+                        "matching_criteria": {
+                            "keywords": ["taxonomy", "portfolio", "overlap", "duplication", "feature mapping", "product structure", "consolidation"],
+                            "discovery_patterns": ["overlapping features", "unclear ownership", "duplicate functionality", "portfolio confusion"],
+                            "phase_indicators": [3]
+                        },
+                        "svpg_source": "Product Coaching Practice"
                     }
                 ],
 
@@ -4710,7 +4735,8 @@
                     'concierge_test': `${clientName} can validate demand before building. Manually delivering the service first will prove whether customers actually want and will pay for the solution.`,
                     'wizard_of_oz': `${clientName} can test the experience without building the technology. Simulating the backend manually lets you validate the user experience first.`,
                     'stakeholder_mapping': `${clientName} has multiple stakeholders to manage. Mapping their interests and influence will help navigate organizational dynamics.`,
-                    'reference_customers': `${clientName} needs early adopters to validate and champion the product. Identifying and nurturing reference customers will accelerate adoption.`
+                    'reference_customers': `${clientName} needs early adopters to validate and champion the product. Identifying and nurturing reference customers will accelerate adoption.`,
+                    'product_taxonomy_mapping': `${clientName} may have overlapping features across products causing user confusion and wasted effort. This workshop will map all capabilities, identify duplications, and establish clear ownership boundaries.`
                 };
 
                 // Check if we have a specific template for this technique
@@ -5359,11 +5385,11 @@
             testFramework.assertNotNull(summaryGenerator, 'SummaryGenerator should be initialized');
         });
 
-        testFramework.test('Technique Library Loads (50 techniques)', () => {
+        testFramework.test('Technique Library Loads (51 techniques)', () => {
             testFramework.assertNotNull(svpgTechniqueLibrary, 'Library should exist');
             testFramework.assertNotNull(svpgTechniqueLibrary.discovery_techniques, 'Discovery techniques exist');
             testFramework.assertNotNull(svpgTechniqueLibrary.coaching_techniques, 'Coaching techniques exist');
-            testFramework.assertEqual(svpgTechniqueLibrary.total_techniques, 50, 'Should have 50 techniques');
+            testFramework.assertEqual(svpgTechniqueLibrary.total_techniques, 51, 'Should have 51 techniques');
         });
 
         testFramework.test('Discovery Questions Defined', () => {
@@ -5397,7 +5423,7 @@
             const state = stateManager.getState();
             testFramework.assertNotNull(state.questions, 'Questions object exists');
             const questionCount = Object.keys(state.questions).length;
-            testFramework.assertEqual(questionCount, 36, 'Should have 36 questions');
+            testFramework.assertEqual(questionCount, 37, 'Should have 37 questions');
         });
 
         testFramework.test('Export Functionality Available', () => {

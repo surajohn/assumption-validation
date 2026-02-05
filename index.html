@@ -2081,6 +2081,309 @@
             }
         }
 
+        /* Version History Panel Styles */
+        .version-history-panel {
+            padding: 20px;
+        }
+
+        .version-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .version-history-header h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .client-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .client-selector label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .client-selector select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .version-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .version-item:hover {
+            border-color: #f9a825;
+            box-shadow: 0 2px 8px rgba(249, 168, 37, 0.2);
+        }
+
+        .version-item.current {
+            border-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .version-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .version-number {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .version-timestamp {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .version-progress {
+            color: #888;
+            font-size: 0.85em;
+        }
+
+        .version-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-load-version {
+            padding: 8px 16px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .btn-load-version:hover {
+            background: #1976D2;
+        }
+
+        .btn-delete-version {
+            padding: 8px 12px;
+            background: transparent;
+            color: #f44336;
+            border: 1px solid #f44336;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-delete-version:hover {
+            background: #f44336;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .storage-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3e0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #e65100;
+        }
+
+        .storage-info.warning {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .storage-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .storage-bar-fill {
+            height: 100%;
+            background: #4caf50;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .storage-bar-fill.warning {
+            background: #ff9800;
+        }
+
+        .storage-bar-fill.danger {
+            background: #f44336;
+        }
+
+        /* Save Version Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #f9a825;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-modal-cancel {
+            background: transparent;
+            border: 1px solid #ddd;
+            color: #666;
+        }
+
+        .btn-modal-save {
+            background: #4caf50;
+            border: none;
+            color: white;
+        }
+
+        .btn-modal-save:hover {
+            background: #43a047;
+        }
+
+        /* Confirmation Dialog */
+        .confirm-dialog {
+            text-align: center;
+        }
+
+        .confirm-dialog p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .confirm-dialog .warning-text {
+            color: #f44336;
+            font-weight: 500;
+        }
+
+        /* Tab styling for Version History */
+        .tab-btn[data-phase="versions"].active {
+            border-bottom-color: #9c27b0;
+            color: #9c27b0;
+        }
+
+        .tab-btn[data-phase="versions"]:hover {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9c27b0;
+        }
+
+        /* Unsaved changes indicator */
+        .unsaved-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ff9800;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
     </style>
 </head>
 <body>
@@ -2179,6 +2482,7 @@
             <button class="tab-btn" data-phase="4">Phase 4: Dynamics<span class="tab-badge">0/13</span></button>
             <button class="tab-btn" data-phase="5">Phase 5: Assumptions<span class="tab-badge">0/1</span></button>
             <button class="tab-btn" data-phase="summary">Summary</button>
+            <button class="tab-btn" data-phase="versions">Version History</button>
         </nav>
 
         <!-- Tab Panels -->
@@ -2195,6 +2499,37 @@
                         <button id="generateSummary" class="btn-primary" disabled>Generate Summary</button>
                     </div>
                     <div id="summaryContent" class="summary-content"></div>
+                </div>
+            </div>
+            <div class="tab-panel" data-phase="versions">
+                <div class="version-history-panel">
+                    <div class="version-history-header">
+                        <h2>Version History</h2>
+                        <div class="version-actions">
+                            <button id="saveVersionBtn" class="btn-primary">Save Version</button>
+                        </div>
+                    </div>
+                    <div class="client-selector">
+                        <label for="clientSelect">Select Client:</label>
+                        <select id="clientSelect">
+                            <option value="">-- Select a client --</option>
+                        </select>
+                        <button id="deleteClientBtn" class="btn-secondary" style="display: none;">Delete Client</button>
+                    </div>
+                    <div id="versionListContainer">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📁</div>
+                            <h3>No Saved Versions</h3>
+                            <p>Save your first version to start tracking your discovery progress.</p>
+                            <button id="saveFirstVersionBtn" class="btn-primary">Save First Version</button>
+                        </div>
+                    </div>
+                    <div id="storageInfo" class="storage-info" style="display: none;">
+                        <strong>Storage Usage:</strong> <span id="storageUsed">0</span> / 5 MB
+                        <div class="storage-bar">
+                            <div id="storageBarFill" class="storage-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2962,6 +3297,13 @@
                 return this.state;
             }
 
+            updateMetadata(key, value) {
+                if (this.state.metadata.hasOwnProperty(key) || key === 'clientName' || key === 'engagementDate') {
+                    this.state.metadata[key] = value;
+                    this.state.metadata.lastModified = new Date().toISOString();
+                }
+            }
+
             setState(newState) {
                 this.state = newState;
                 this.renderAllQuestions();
@@ -3598,6 +3940,560 @@
                     notification.classList.remove('show');
                     setTimeout(() => notification.remove(), 300);
                 }, 3000);
+            }
+        }
+
+        // ============================================================================
+        // VERSION MANAGER CLASS - Auto-versioning with localStorage
+        // ============================================================================
+        class VersionManager {
+            constructor(stateManager, dataManager) {
+                this.stateManager = stateManager;
+                this.dataManager = dataManager;
+                this.STORAGE_KEY = 'lea_clients';
+                this.MAX_STORAGE_MB = 5;
+                this.currentClientName = null;
+                this.lastSavedStateHash = null;
+                this.setupEventListeners();
+                this.renderVersionHistory();
+            }
+
+            setupEventListeners() {
+                document.getElementById('saveVersionBtn').addEventListener('click', () => {
+                    this.promptSaveVersion();
+                });
+
+                document.getElementById('saveFirstVersionBtn').addEventListener('click', () => {
+                    this.promptSaveVersion();
+                });
+
+                document.getElementById('clientSelect').addEventListener('change', (e) => {
+                    this.onClientSelect(e.target.value);
+                });
+
+                document.getElementById('deleteClientBtn').addEventListener('click', () => {
+                    this.confirmDeleteClient();
+                });
+            }
+
+            // ==================== Core Storage Functions ====================
+
+            getStorageData() {
+                try {
+                    const data = localStorage.getItem(this.STORAGE_KEY);
+                    return data ? JSON.parse(data) : {};
+                } catch (error) {
+                    console.error('Error reading localStorage:', error);
+                    return {};
+                }
+            }
+
+            setStorageData(data) {
+                try {
+                    const jsonString = JSON.stringify(data);
+                    localStorage.setItem(this.STORAGE_KEY, jsonString);
+                    return true;
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        this.dataManager.showNotification('Storage limit reached. Please delete some versions.', 'error');
+                    } else {
+                        console.error('Error writing to localStorage:', error);
+                        this.dataManager.showNotification('Error saving data: ' + error.message, 'error');
+                    }
+                    return false;
+                }
+            }
+
+            // ==================== Client Name Sanitization ====================
+
+            sanitizeClientName(name) {
+                if (!name || typeof name !== 'string') return '';
+                // Remove special chars that could break localStorage keys
+                // Allow alphanumeric, spaces, hyphens, underscores
+                return name.trim()
+                    .replace(/[^a-zA-Z0-9\s\-_]/g, '')
+                    .substring(0, 100);
+            }
+
+            // ==================== Core Version Functions ====================
+
+            saveVersion(clientName) {
+                const sanitizedName = this.sanitizeClientName(clientName);
+                if (!sanitizedName) {
+                    this.dataManager.showNotification('Please enter a valid client name', 'error');
+                    return false;
+                }
+
+                const state = this.stateManager.getState();
+                const coverage = this.stateManager.calculateCoverage();
+                const storageData = this.getStorageData();
+
+                // Initialize client if doesn't exist
+                if (!storageData[sanitizedName]) {
+                    storageData[sanitizedName] = {
+                        versions: [],
+                        currentVersion: 0
+                    };
+                }
+
+                const client = storageData[sanitizedName];
+                const newVersionNumber = client.versions.length + 1;
+
+                // Create version snapshot
+                const versionData = {
+                    version: newVersionNumber,
+                    timestamp: new Date().toISOString(),
+                    data: JSON.parse(JSON.stringify(state)), // Deep clone
+                    summary: {
+                        answeredCount: coverage.answeredCount,
+                        totalCount: coverage.totalCount,
+                        percentage: coverage.overall
+                    }
+                };
+
+                client.versions.push(versionData);
+                client.currentVersion = newVersionNumber;
+
+                if (this.setStorageData(storageData)) {
+                    this.currentClientName = sanitizedName;
+                    this.lastSavedStateHash = this.hashState(state);
+
+                    // Update client name in metadata if not set
+                    if (!state.metadata.clientName) {
+                        document.getElementById('clientName').value = sanitizedName;
+                        this.stateManager.updateMetadata('clientName', sanitizedName);
+                    }
+
+                    this.dataManager.showNotification(`Version ${newVersionNumber} saved for ${sanitizedName}`, 'success');
+                    this.renderVersionHistory();
+                    this.updateStorageInfo();
+                    return true;
+                }
+                return false;
+            }
+
+            loadVersion(clientName, versionNumber) {
+                const storageData = this.getStorageData();
+                const client = storageData[clientName];
+
+                if (!client) {
+                    this.dataManager.showNotification('Client not found', 'error');
+                    return false;
+                }
+
+                const version = client.versions.find(v => v.version === versionNumber);
+                if (!version) {
+                    this.dataManager.showNotification('Version not found', 'error');
+                    return false;
+                }
+
+                // Restore state
+                this.stateManager.setState(version.data);
+                this.currentClientName = clientName;
+                client.currentVersion = versionNumber;
+                this.setStorageData(storageData);
+                this.lastSavedStateHash = this.hashState(version.data);
+
+                this.dataManager.showNotification(`Loaded ${clientName} - Version ${versionNumber}`, 'success');
+                this.renderVersionHistory();
+
+                // Switch to Phase 1 tab after loading
+                if (window.tabNavigator) {
+                    window.tabNavigator.switchTab('1');
+                }
+
+                return true;
+            }
+
+            deleteVersion(clientName, versionNumber) {
+                const storageData = this.getStorageData();
+                const client = storageData[clientName];
+
+                if (!client) {
+                    this.dataManager.showNotification('Client not found', 'error');
+                    return false;
+                }
+
+                const versionIndex = client.versions.findIndex(v => v.version === versionNumber);
+                if (versionIndex === -1) {
+                    this.dataManager.showNotification('Version not found', 'error');
+                    return false;
+                }
+
+                // Remove version
+                client.versions.splice(versionIndex, 1);
+
+                // If no versions left, remove client entirely
+                if (client.versions.length === 0) {
+                    delete storageData[clientName];
+                    if (this.currentClientName === clientName) {
+                        this.currentClientName = null;
+                    }
+                } else {
+                    // Renumber remaining versions
+                    client.versions.forEach((v, i) => {
+                        v.version = i + 1;
+                    });
+                    client.currentVersion = client.versions.length;
+                }
+
+                if (this.setStorageData(storageData)) {
+                    this.dataManager.showNotification(`Version ${versionNumber} deleted`, 'success');
+                    this.renderVersionHistory();
+                    this.updateStorageInfo();
+                    return true;
+                }
+                return false;
+            }
+
+            deleteClient(clientName) {
+                const storageData = this.getStorageData();
+
+                if (!storageData[clientName]) {
+                    this.dataManager.showNotification('Client not found', 'error');
+                    return false;
+                }
+
+                delete storageData[clientName];
+
+                if (this.currentClientName === clientName) {
+                    this.currentClientName = null;
+                }
+
+                if (this.setStorageData(storageData)) {
+                    this.dataManager.showNotification(`Client "${clientName}" and all versions deleted`, 'success');
+                    this.renderVersionHistory();
+                    this.updateStorageInfo();
+                    return true;
+                }
+                return false;
+            }
+
+            listClients() {
+                const storageData = this.getStorageData();
+                return Object.entries(storageData).map(([name, client]) => ({
+                    name: name,
+                    versionCount: client.versions.length,
+                    currentVersion: client.currentVersion,
+                    lastModified: client.versions.length > 0
+                        ? client.versions[client.versions.length - 1].timestamp
+                        : null
+                }));
+            }
+
+            // ==================== Unsaved Changes Detection ====================
+
+            hashState(state) {
+                // Simple hash of state for comparison
+                return JSON.stringify({
+                    metadata: state.metadata,
+                    questions: Object.values(state.questions).map(q => ({
+                        id: q.questionId,
+                        findings: q.findings,
+                        notes: q.notes,
+                        status: q.status,
+                        methods: q.discoveryMethods
+                    }))
+                });
+            }
+
+            hasUnsavedChanges() {
+                if (!this.lastSavedStateHash) return true;
+                const currentHash = this.hashState(this.stateManager.getState());
+                return currentHash !== this.lastSavedStateHash;
+            }
+
+            // ==================== Storage Info ====================
+
+            getStorageUsage() {
+                try {
+                    const data = localStorage.getItem(this.STORAGE_KEY) || '';
+                    const bytes = new Blob([data]).size;
+                    const mb = bytes / (1024 * 1024);
+                    return {
+                        bytes: bytes,
+                        mb: mb,
+                        percentage: (mb / this.MAX_STORAGE_MB) * 100
+                    };
+                } catch (error) {
+                    return { bytes: 0, mb: 0, percentage: 0 };
+                }
+            }
+
+            updateStorageInfo() {
+                const usage = this.getStorageUsage();
+                const storageInfo = document.getElementById('storageInfo');
+                const storageUsed = document.getElementById('storageUsed');
+                const storageBarFill = document.getElementById('storageBarFill');
+
+                if (usage.mb > 0.01) {
+                    storageInfo.style.display = 'block';
+                    storageUsed.textContent = usage.mb.toFixed(2) + ' MB';
+                    storageBarFill.style.width = Math.min(usage.percentage, 100) + '%';
+
+                    // Update colors based on usage
+                    storageBarFill.classList.remove('warning', 'danger');
+                    storageInfo.classList.remove('warning');
+
+                    if (usage.percentage >= 80) {
+                        storageBarFill.classList.add('danger');
+                        storageInfo.classList.add('warning');
+                    } else if (usage.percentage >= 50) {
+                        storageBarFill.classList.add('warning');
+                    }
+                } else {
+                    storageInfo.style.display = 'none';
+                }
+            }
+
+            // ==================== UI Rendering ====================
+
+            renderVersionHistory() {
+                const clients = this.listClients();
+                const clientSelect = document.getElementById('clientSelect');
+                const container = document.getElementById('versionListContainer');
+                const deleteClientBtn = document.getElementById('deleteClientBtn');
+
+                // Update client dropdown
+                clientSelect.innerHTML = '<option value="">-- Select a client --</option>';
+                clients.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.name;
+                    option.textContent = `${client.name} (${client.versionCount} version${client.versionCount !== 1 ? 's' : ''})`;
+                    if (client.name === this.currentClientName) {
+                        option.selected = true;
+                    }
+                    clientSelect.appendChild(option);
+                });
+
+                // Show/hide delete client button
+                deleteClientBtn.style.display = this.currentClientName ? 'inline-block' : 'none';
+
+                // Render version list or empty state
+                if (!this.currentClientName || clients.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📁</div>
+                            <h3>No Saved Versions</h3>
+                            <p>Save your first version to start tracking your discovery progress.</p>
+                            <button id="saveFirstVersionBtn" class="btn-primary">Save First Version</button>
+                        </div>
+                    `;
+                    document.getElementById('saveFirstVersionBtn').addEventListener('click', () => {
+                        this.promptSaveVersion();
+                    });
+                    return;
+                }
+
+                const storageData = this.getStorageData();
+                const client = storageData[this.currentClientName];
+
+                if (!client || client.versions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📄</div>
+                            <h3>No Versions for ${this.currentClientName}</h3>
+                            <p>Save a version to track your progress.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render version list (newest first)
+                const versionsHtml = client.versions
+                    .slice()
+                    .reverse()
+                    .map(v => {
+                        const date = new Date(v.timestamp);
+                        const formattedDate = date.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        const isCurrent = v.version === client.currentVersion;
+                        const progress = v.summary
+                            ? `${v.summary.answeredCount}/${v.summary.totalCount} (${v.summary.percentage}%)`
+                            : 'N/A';
+
+                        return `
+                            <div class="version-item ${isCurrent ? 'current' : ''}" data-version="${v.version}">
+                                <div class="version-info">
+                                    <span class="version-number">Version ${v.version}${isCurrent ? ' (Current)' : ''}</span>
+                                    <span class="version-timestamp">${formattedDate}</span>
+                                    <span class="version-progress">Progress: ${progress}</span>
+                                </div>
+                                <div class="version-item-actions">
+                                    <button class="btn-load-version" data-client="${this.currentClientName}" data-version="${v.version}">
+                                        ${isCurrent ? 'Reload' : 'Load'}
+                                    </button>
+                                    <button class="btn-delete-version" data-client="${this.currentClientName}" data-version="${v.version}">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('');
+
+                container.innerHTML = `<div class="version-list">${versionsHtml}</div>`;
+
+                // Add event listeners for version actions
+                container.querySelectorAll('.btn-load-version').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const clientName = btn.dataset.client;
+                        const version = parseInt(btn.dataset.version, 10);
+                        this.confirmLoadVersion(clientName, version);
+                    });
+                });
+
+                container.querySelectorAll('.btn-delete-version').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const clientName = btn.dataset.client;
+                        const version = parseInt(btn.dataset.version, 10);
+                        this.confirmDeleteVersion(clientName, version);
+                    });
+                });
+
+                this.updateStorageInfo();
+            }
+
+            onClientSelect(clientName) {
+                this.currentClientName = clientName || null;
+                this.renderVersionHistory();
+            }
+
+            // ==================== Modal Dialogs ====================
+
+            promptSaveVersion() {
+                const state = this.stateManager.getState();
+                const currentClientName = state.metadata.clientName || this.currentClientName || '';
+
+                if (currentClientName) {
+                    // Auto-save to existing client
+                    this.saveVersion(currentClientName);
+                } else {
+                    // Prompt for client name
+                    this.showSaveModal();
+                }
+            }
+
+            showSaveModal() {
+                const state = this.stateManager.getState();
+                const suggestedName = state.metadata.clientName || '';
+
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>Save Version</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Enter a client name to save this discovery session.</p>
+                        <input type="text" id="saveClientNameInput" placeholder="Client Name" value="${suggestedName}">
+                        <div class="modal-buttons">
+                            <button class="btn-modal-cancel">Cancel</button>
+                            <button class="btn-modal-save">Save</button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                const input = modal.querySelector('#saveClientNameInput');
+                input.focus();
+                input.select();
+
+                const closeModal = () => {
+                    document.body.removeChild(modal);
+                };
+
+                modal.querySelector('.btn-modal-cancel').addEventListener('click', closeModal);
+                modal.querySelector('.btn-modal-save').addEventListener('click', () => {
+                    const name = input.value.trim();
+                    if (name) {
+                        closeModal();
+                        this.saveVersion(name);
+                    } else {
+                        input.style.borderColor = '#f44336';
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        modal.querySelector('.btn-modal-save').click();
+                    } else if (e.key === 'Escape') {
+                        closeModal();
+                    }
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            confirmLoadVersion(clientName, versionNumber) {
+                if (this.hasUnsavedChanges()) {
+                    this.showConfirmModal(
+                        'Unsaved Changes',
+                        'You have unsaved changes. Loading a different version will discard these changes. Do you want to continue?',
+                        () => this.loadVersion(clientName, versionNumber)
+                    );
+                } else {
+                    this.loadVersion(clientName, versionNumber);
+                }
+            }
+
+            confirmDeleteVersion(clientName, versionNumber) {
+                this.showConfirmModal(
+                    'Delete Version',
+                    `Are you sure you want to delete Version ${versionNumber}? This action cannot be undone.`,
+                    () => this.deleteVersion(clientName, versionNumber)
+                );
+            }
+
+            confirmDeleteClient() {
+                if (!this.currentClientName) return;
+
+                const storageData = this.getStorageData();
+                const client = storageData[this.currentClientName];
+                const versionCount = client ? client.versions.length : 0;
+
+                this.showConfirmModal(
+                    'Delete Client',
+                    `Are you sure you want to delete "${this.currentClientName}" and all ${versionCount} version(s)? This action cannot be undone.`,
+                    () => this.deleteClient(this.currentClientName)
+                );
+            }
+
+            showConfirmModal(title, message, onConfirm) {
+                const modal = document.createElement('div');
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content confirm-dialog">
+                        <h3>${title}</h3>
+                        <p class="warning-text">${message}</p>
+                        <div class="modal-buttons">
+                            <button class="btn-modal-cancel">Cancel</button>
+                            <button class="btn-modal-save" style="background: #f44336;">Delete</button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                const closeModal = () => {
+                    document.body.removeChild(modal);
+                };
+
+                modal.querySelector('.btn-modal-cancel').addEventListener('click', closeModal);
+                modal.querySelector('.btn-modal-save').addEventListener('click', () => {
+                    closeModal();
+                    onConfirm();
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
             }
         }
 
@@ -5449,8 +6345,127 @@
             testFramework.assertNotNull(summaryGenerator.identifyGaps, 'Identify gaps method exists');
         });
 
+        // ============================================
+        // VERSION MANAGER TESTS
+        // ============================================
+        testFramework.test('Version Manager Initializes', () => {
+            testFramework.assertNotNull(versionManager, 'VersionManager should be initialized');
+            testFramework.assertNotNull(versionManager.saveVersion, 'saveVersion method exists');
+            testFramework.assertNotNull(versionManager.loadVersion, 'loadVersion method exists');
+            testFramework.assertNotNull(versionManager.deleteVersion, 'deleteVersion method exists');
+            testFramework.assertNotNull(versionManager.listClients, 'listClients method exists');
+        });
+
+        testFramework.test('Version Manager - Client Name Sanitization', () => {
+            const sanitized1 = versionManager.sanitizeClientName('Test Client 123');
+            testFramework.assertEqual(sanitized1, 'Test Client 123', 'Normal name should remain unchanged');
+
+            const sanitized2 = versionManager.sanitizeClientName('Test@Client#$%');
+            testFramework.assertEqual(sanitized2, 'TestClient', 'Special chars should be removed');
+
+            const sanitized3 = versionManager.sanitizeClientName('   Spaces   ');
+            testFramework.assertEqual(sanitized3, 'Spaces', 'Should trim whitespace');
+
+            const sanitized4 = versionManager.sanitizeClientName('');
+            testFramework.assertEqual(sanitized4, '', 'Empty string should return empty');
+
+            const sanitized5 = versionManager.sanitizeClientName(null);
+            testFramework.assertEqual(sanitized5, '', 'Null should return empty');
+        });
+
+        testFramework.test('Version Manager - Save and Load Version', () => {
+            // Clean up any existing test data
+            const testClientName = 'TestClient_' + Date.now();
+
+            // Set some test state
+            stateManager.updateQuestion('q1', 'findings', 'Test finding for version test');
+
+            // Save version
+            const saveResult = versionManager.saveVersion(testClientName);
+            testFramework.assert(saveResult === true, 'Save should return true');
+
+            // Check client exists
+            const clients = versionManager.listClients();
+            const testClient = clients.find(c => c.name === testClientName);
+            testFramework.assertNotNull(testClient, 'Client should exist after save');
+            testFramework.assertEqual(testClient.versionCount, 1, 'Should have 1 version');
+
+            // Clear state and load
+            stateManager.updateQuestion('q1', 'findings', '');
+            const loadResult = versionManager.loadVersion(testClientName, 1);
+            testFramework.assert(loadResult === true, 'Load should return true');
+
+            // Verify state restored
+            const state = stateManager.getState();
+            testFramework.assertEqual(state.questions.q1.findings, 'Test finding for version test', 'Findings should be restored');
+
+            // Clean up
+            versionManager.deleteClient(testClientName);
+        });
+
+        testFramework.test('Version Manager - Multiple Versions', () => {
+            const testClientName = 'TestClient_MultiVersion_' + Date.now();
+
+            // Save first version
+            stateManager.updateQuestion('q1', 'findings', 'Version 1 finding');
+            versionManager.saveVersion(testClientName);
+
+            // Save second version
+            stateManager.updateQuestion('q1', 'findings', 'Version 2 finding');
+            versionManager.saveVersion(testClientName);
+
+            // Check version count
+            const clients = versionManager.listClients();
+            const testClient = clients.find(c => c.name === testClientName);
+            testFramework.assertEqual(testClient.versionCount, 2, 'Should have 2 versions');
+
+            // Load version 1
+            versionManager.loadVersion(testClientName, 1);
+            let state = stateManager.getState();
+            testFramework.assertEqual(state.questions.q1.findings, 'Version 1 finding', 'Should load version 1');
+
+            // Load version 2
+            versionManager.loadVersion(testClientName, 2);
+            state = stateManager.getState();
+            testFramework.assertEqual(state.questions.q1.findings, 'Version 2 finding', 'Should load version 2');
+
+            // Clean up
+            versionManager.deleteClient(testClientName);
+        });
+
+        testFramework.test('Version Manager - Delete Version', () => {
+            const testClientName = 'TestClient_Delete_' + Date.now();
+
+            // Save two versions
+            stateManager.updateQuestion('q1', 'findings', 'Version 1');
+            versionManager.saveVersion(testClientName);
+            stateManager.updateQuestion('q1', 'findings', 'Version 2');
+            versionManager.saveVersion(testClientName);
+
+            // Delete version 1
+            const deleteResult = versionManager.deleteVersion(testClientName, 1);
+            testFramework.assert(deleteResult === true, 'Delete should return true');
+
+            // Check only 1 version remains
+            const clients = versionManager.listClients();
+            const testClient = clients.find(c => c.name === testClientName);
+            testFramework.assertEqual(testClient.versionCount, 1, 'Should have 1 version after delete');
+
+            // Clean up
+            versionManager.deleteClient(testClientName);
+        });
+
+        testFramework.test('Version Manager - Storage Info', () => {
+            const usage = versionManager.getStorageUsage();
+            testFramework.assertNotNull(usage, 'Usage should be returned');
+            testFramework.assert(typeof usage.bytes === 'number', 'Bytes should be a number');
+            testFramework.assert(typeof usage.mb === 'number', 'MB should be a number');
+            testFramework.assert(typeof usage.percentage === 'number', 'Percentage should be a number');
+            testFramework.assert(usage.percentage >= 0, 'Percentage should be >= 0');
+        });
+
         // Global manager variables
-        let stateManager, tabNavigator, dataManager, summaryGenerator;
+        let stateManager, tabNavigator, dataManager, summaryGenerator, versionManager;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', () => {
@@ -5458,9 +6473,12 @@
             tabNavigator = new TabNavigator();
             dataManager = new DataManager(stateManager);
             summaryGenerator = new SummaryGenerator(stateManager);
+            versionManager = new VersionManager(stateManager, dataManager);
 
             // Make managers globally accessible
             window.dataManager = dataManager;
+            window.tabNavigator = tabNavigator;
+            window.versionManager = versionManager;
 
             // Set default engagement date
             document.getElementById('engagementDate').value = new Date().toISOString().split('T')[0];

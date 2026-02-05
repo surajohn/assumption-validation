@@ -1,0 +1,52 @@
+====================================================
+           LEA - Learning Empowered Advisor
+              QUICK START GUIDE
+====================================================
+
+YOUR FILES AT A GLANCE:
+-----------------------
+  index.html      = The LEA Application (open this!)
+  START-LEA.sh    = Double-click to launch LEA
+  demo-data/      = Demo files to import and show clients
+  backups/        = Your saved assessment backups
+  _developer/     = Technical files (ignore this folder)
+
+
+HOW TO START LEA:
+-----------------
+Option 1: Double-click START-LEA.sh
+Option 2: Drag index.html into your browser
+
+
+HOW TO RUN A DEMO FOR CLIENTS:
+------------------------------
+1. Open LEA (double-click START-LEA.sh)
+2. Click the "Import" button at the top
+3. Select: demo-data/Acme-Corp-Demo.json
+4. LEA will load with pre-filled discovery data
+5. Walk through the phases with your client
+6. Click "Summary" tab to show AI recommendations
+
+
+HOW TO SAVE YOUR WORK:
+----------------------
+Option 1: Version History (NEW!)
+  - Click "Version History" tab
+  - Click "Save Version"
+  - Your progress is saved locally
+
+Option 2: Export JSON
+  - Click "Export JSON" button
+  - Save the file to your computer
+
+
+FOLDER GUIDE:
+-------------
+demo-data/        Put demo JSON files here for client presentations
+backups/          Old backups and example data
+_developer/       Technical files - you can ignore this completely
+
+
+====================================================
+               Need help? Check README.md
+====================================================

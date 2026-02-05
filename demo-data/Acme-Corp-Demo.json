@@ -1,0 +1,426 @@
+{
+  "version": "2.0",
+  "exportDate": "2026-02-05T12:00:00.000Z",
+  "metadata": {
+    "clientName": "Acme Corporation",
+    "engagementDate": "2026-02-05",
+    "lastModified": "2026-02-05T12:00:00.000Z",
+    "sessionNotes": []
+  },
+  "questions": [
+    {
+      "questionId": "q1",
+      "phase": 1,
+      "text": "Why does this product exist?",
+      "findings": "Acme Corp is building an invoice processing platform to reduce manual data entry. Customer interviews revealed that finance teams spend 40% of their time on manual invoice processing. The core problem is the lack of automated extraction and validation of invoice data.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "observation"],
+      "notes": "Key insight: Finance teams are frustrated with repetitive data entry tasks",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q2",
+      "phase": 1,
+      "text": "Who actually experiences the problem we are solving?",
+      "findings": "Primary users are Accounts Payable clerks and Finance Managers in mid-market companies (50-500 employees). They process 200-500 invoices per month. Secondary stakeholders include CFOs who need real-time visibility into payables.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "survey"],
+      "notes": "Persona: AP Clerk processing 200+ invoices monthly",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q3",
+      "phase": 1,
+      "text": "How do we know this problem is worth solving now?",
+      "findings": "Market research shows 73% of mid-market companies still use manual invoice processing. Competitors are gaining traction. Customer interviews confirm urgent pain point with 8/10 rating average.",
+      "status": "answered",
+      "discoveryMethods": ["data_analysis", "interview"],
+      "notes": "",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q4",
+      "phase": 1,
+      "text": "What decision are we trying to enable or change?",
+      "findings": "Enable faster approval workflows. Currently invoices sit in queues for 5-7 days. Target: same-day processing for 80% of invoices.",
+      "status": "answered",
+      "discoveryMethods": ["interview", "document_review"],
+      "notes": "",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q22",
+      "phase": 1,
+      "text": "What alternatives do users have today?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q23",
+      "phase": 1,
+      "text": "What's been tried before and why did it fail?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q5",
+      "phase": 2,
+      "text": "What would good look like three months from now?",
+      "findings": "3-month success criteria: 70% reduction in manual data entry time, 95% invoice extraction accuracy, and positive NPS from pilot customers. Team aligned on these metrics during planning workshop.",
+      "status": "answered",
+      "discoveryMethods": ["workshop"],
+      "notes": "Metrics agreed upon with leadership",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q6",
+      "phase": 2,
+      "text": "What success would look like in a (insert time period)?",
+      "findings": "6-month target: 50 paying customers, $100K ARR, 90% customer retention. 12-month: 200 customers, $500K ARR.",
+      "status": "answered",
+      "discoveryMethods": ["workshop", "data_analysis"],
+      "notes": "",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q7",
+      "phase": 2,
+      "text": "How will we know this worked?",
+      "findings": "Key metrics: Time-to-process per invoice, extraction accuracy rate, user adoption rate. We have baseline data from current manual process (avg 8 min/invoice). A/B testing planned for automation vs manual processing.",
+      "status": "answered",
+      "discoveryMethods": ["data_analysis"],
+      "notes": "Dashboard being built to track these metrics",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q8",
+      "phase": 2,
+      "text": "The team's relationship with metrics",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q24",
+      "phase": 2,
+      "text": "What is the team actually measuring today?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q25",
+      "phase": 2,
+      "text": "Do we have baseline data to compare against?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q26",
+      "phase": 2,
+      "text": "Does the team have the tools/infrastructure to measure outcomes?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q27",
+      "phase": 2,
+      "text": "How long does it take to know if something worked?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q28",
+      "phase": 2,
+      "text": "How do we know our changes caused the outcome vs external factors?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q29",
+      "phase": 2,
+      "text": "Are we tracking leading indicators or only lagging ones?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q9",
+      "phase": 3,
+      "text": "Where product ownership actually lives today?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q10",
+      "phase": 3,
+      "text": "Role clarity across PO, PMs, and engineers",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q11",
+      "phase": 3,
+      "text": "Who decides when priorities collide?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q12",
+      "phase": 3,
+      "text": "How intentional the backlog really is?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q30",
+      "phase": 3,
+      "text": "Are key stakeholders aligned on the vision and priorities?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q31",
+      "phase": 3,
+      "text": "How do decisions and learnings get shared across the org?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q37",
+      "phase": 3,
+      "text": "Are there overlapping features or capabilities across products?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q13",
+      "phase": 4,
+      "text": "The team's and leadership's appetite for challenge vs safety",
+      "findings": "Team shows high appetite for innovation but leadership is risk-averse due to recent failed project. Need to build confidence through small wins. Recommend incremental delivery with frequent demos.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "Previous project failure still affecting team morale",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q14",
+      "phase": 4,
+      "text": "How much autonomy the team believes they have?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q15",
+      "phase": 4,
+      "text": "How the team currently defines value",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q16",
+      "phase": 4,
+      "text": "Team's past failures or trauma (did a big project fail?)",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q17",
+      "phase": 4,
+      "text": "Hidden stakeholders who actually control decisions",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q18",
+      "phase": 4,
+      "text": "Budget or resource constraints that nobody talks about",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q19",
+      "phase": 4,
+      "text": "Technical debt or system constraints limiting autonomy",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q20",
+      "phase": 4,
+      "text": "Geographic or org structure issues (distributed teams, cross functional friction)",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q32",
+      "phase": 4,
+      "text": "How often does the team directly interact with customers/users?",
+      "findings": "Currently minimal direct customer contact - only through support tickets. No regular user research cadence. Team relies on stakeholder assumptions about user needs. This is a significant gap that needs addressing.",
+      "status": "answered",
+      "discoveryMethods": ["interview"],
+      "notes": "CRITICAL GAP - Need to establish regular customer touchpoints",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "validated"
+    },
+    {
+      "questionId": "q33",
+      "phase": 4,
+      "text": "What external dependencies could block or delay progress?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q34",
+      "phase": 4,
+      "text": "How does the team currently learn and experiment?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q35",
+      "phase": 4,
+      "text": "Does the team have the capabilities needed for this work?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q36",
+      "phase": 4,
+      "text": "Are there hard external deadlines driving this work?",
+      "findings": "",
+      "status": "open",
+      "discoveryMethods": [],
+      "notes": "",
+      "lastUpdated": "",
+      "assumptionStatus": "assumption"
+    },
+    {
+      "questionId": "q21",
+      "phase": 5,
+      "text": "What assumptions are we making that we have not tested?",
+      "findings": "UNTESTED ASSUMPTIONS:\n1. Users will trust AI-extracted data without manual verification\n2. Integration with existing ERP systems will be straightforward\n3. Customers will pay premium pricing for automation\n\nRECOMMENDATION: Run prototype tests with 3 pilot customers before full development.",
+      "status": "answered",
+      "discoveryMethods": ["workshop"],
+      "notes": "High priority - validate before major investment",
+      "lastUpdated": "2026-02-05T12:00:00.000Z",
+      "assumptionStatus": "assumption"
+    }
+  ],
+  "analysis": {
+    "coverage": {
+      "totalQuestions": 37,
+      "answeredQuestions": 11,
+      "completionPercentage": 30
+    }
+  }
+}

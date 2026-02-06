@@ -1443,6 +1443,210 @@
             gap: 15px;
         }
 
+        /* Urgency Indicators */
+        .urgency-indicator {
+            font-size: 1.2em;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .urgency-indicator.critical {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Expandable Detail Sections */
+        .technique-details-sections {
+            margin-top: 15px;
+        }
+
+        .detail-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .section-toggle {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #fafafa;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .section-toggle:hover {
+            background: #f0f0f0;
+        }
+
+        .section-toggle::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .section-toggle[aria-expanded="false"]::after {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding: 15px;
+            max-height: 500px;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            padding: 0 15px;
+        }
+
+        /* Score Breakdown */
+        .score-breakdown {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .score-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .score-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            border-top: 2px solid #333;
+            margin-top: 5px;
+            padding-top: 10px;
+        }
+
+        .score-label {
+            color: #555;
+        }
+
+        .score-value {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .score-value.zero {
+            color: #999;
+        }
+
+        /* Q&A Attribution */
+        .qa-attribution {
+            background: #f5f9ff;
+            border-left: 3px solid #2196f3;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .qa-attribution-header {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .qa-item {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e3f2fd;
+        }
+
+        .qa-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .qa-question {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .qa-terms {
+            font-size: 12px;
+            color: #1976d2;
+        }
+
+        .qa-points {
+            font-size: 11px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        /* Contextual Rationale */
+        .contextual-rationale {
+            font-style: italic;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* Contextualized Outcomes */
+        .contextualized-outcomes ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .contextualized-outcomes li {
+            padding: 4px 0;
+            color: #555;
+        }
+
+        .contextualized-outcomes li .context-note {
+            font-size: 11px;
+            color: #1976d2;
+            font-style: italic;
+        }
+
+        /* Sequencing Info */
+        .sequencing-info {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .sequencing-prerequisites {
+            margin-bottom: 10px;
+        }
+
+        .sequencing-prerequisite-list {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+
+        .sequencing-prerequisite-list li {
+            padding: 4px 0;
+            color: #f57c00;
+        }
+
+        .sequencing-prerequisite-list li::before {
+            content: '↗ ';
+        }
+
         /* Notifications */
         #notifications {
             position: fixed;
@@ -2742,6 +2946,10 @@
                     }
                     // Handle technique card collapse
                     if (e.target.closest('.collapse-btn') || e.target.closest('.technique-header')) {
+                        // Don't collapse card if clicking on section toggle
+                        if (e.target.closest('.section-toggle')) {
+                            return;
+                        }
                         const header = e.target.closest('.technique-header');
                         if (header) {
                             const card = header.closest('.technique-card');
@@ -2750,6 +2958,14 @@
                                 card.dataset.collapsed = isCollapsed ? 'false' : 'true';
                             }
                         }
+                    }
+                    // Handle section toggle for expandable detail sections
+                    if (e.target.closest('.section-toggle')) {
+                        const toggle = e.target.closest('.section-toggle');
+                        const content = toggle.closest('.detail-section').querySelector('.section-content');
+                        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                        toggle.setAttribute('aria-expanded', !isExpanded);
+                        content.classList.toggle('collapsed', isExpanded);
                     }
                     // Handle method preset clicks
                     if (e.target.matches('.preset-btn')) {
@@ -5459,6 +5675,41 @@
             }
         };
 
+        // Technique Dependency Graph for sequencing recommendations
+        const techniqueDependencyGraph = {
+            'team_objective': { prerequisites: [], enables: ['opportunity_assessment', 'customer_interviews', 'lean_canvas'] },
+            'opportunity_assessment': { prerequisites: ['team_objective'], enables: ['lean_canvas', 'journey_map', 'stakeholder_mapping'] },
+            'customer_interviews': { prerequisites: ['team_objective'], enables: ['usability_testing', 'prototype_testing', 'jobs_to_be_done'] },
+            'user_interviews': { prerequisites: [], enables: ['journey_map', 'jobs_to_be_done', 'prototype_testing'] },
+            'assumption_testing': { prerequisites: [], enables: ['prototype_testing', 'a_b_testing', 'concierge_test'] },
+            'prototype_testing': { prerequisites: ['assumption_testing'], enables: ['usability_testing', 'a_b_testing'] },
+            'usability_testing': { prerequisites: ['prototype_testing'], enables: ['a_b_testing'] },
+            'lean_canvas': { prerequisites: ['opportunity_assessment'], enables: ['pr_faq', 'assumption_testing'] },
+            'pr_faq': { prerequisites: ['lean_canvas'], enables: ['prototype_testing'] },
+            'journey_map': { prerequisites: ['user_interviews'], enables: ['story_mapping', 'usability_testing'] },
+            'story_mapping': { prerequisites: ['journey_map'], enables: ['prototype_testing'] },
+            'jobs_to_be_done': { prerequisites: ['customer_interviews'], enables: ['opportunity_assessment', 'prototype_testing'] },
+            'a_b_testing': { prerequisites: ['prototype_testing'], enables: ['heart_metrics', 'data_mining'] },
+            'heart_metrics': { prerequisites: [], enables: ['a_b_testing', 'data_mining'] },
+            'data_mining': { prerequisites: ['heart_metrics'], enables: ['assumption_testing'] },
+            'concierge_test': { prerequisites: ['assumption_testing'], enables: ['wizard_of_oz', 'prototype_testing'] },
+            'wizard_of_oz': { prerequisites: ['concierge_test'], enables: ['prototype_testing'] },
+            'stakeholder_mapping': { prerequisites: ['opportunity_assessment'], enables: ['reference_customers'] },
+            'reference_customers': { prerequisites: ['stakeholder_mapping'], enables: [] },
+            'continuous_discovery': { prerequisites: ['customer_interviews'], enables: ['usability_testing', 'a_b_testing'] },
+            'product_taxonomy_mapping': { prerequisites: [], enables: ['journey_map', 'stakeholder_mapping'] }
+        };
+
+        // Blocker Detection Patterns for urgency classification
+        const blockerPatterns = [
+            { id: 'no_customer_contact', patterns: ['no customer', 'haven\'t talked', 'no interviews', 'never spoken', 'no user research', 'no customer contact'], urgencyBoost: 'critical' },
+            { id: 'unclear_problem', patterns: ['unclear problem', 'feature factory', 'don\'t know why', 'no problem definition', 'problem not defined', 'unclear why'], urgencyBoost: 'critical' },
+            { id: 'no_metrics', patterns: ['no metrics', 'no success criteria', 'don\'t measure', 'no kpis', 'not measuring', 'no measurement'], urgencyBoost: 'important' },
+            { id: 'no_validation', patterns: ['no validation', 'not validated', 'unvalidated', 'assumptions not tested', 'never tested'], urgencyBoost: 'important' },
+            { id: 'stakeholder_misalignment', patterns: ['stakeholders disagree', 'no alignment', 'conflicting priorities', 'misaligned'], urgencyBoost: 'important' },
+            { id: 'no_discovery', patterns: ['no discovery', 'skipping discovery', 'straight to build', 'build first'], urgencyBoost: 'critical' }
+        ];
+
         // Technique Recommender Class
         class TechniqueRecommender {
             constructor() {
@@ -5539,33 +5790,87 @@
             scoreAndRankTechniques(techniques, allFindings, state) {
                 const clientName = state.metadata?.clientName || 'your team';
 
+                // Build Q&A attribution map once for all techniques
+                const qaMap = this.buildQAAttributionMap(state);
+
+                // Detect blockers once
+                const detectedBlockers = this.detectBlockers(allFindings);
+
                 const scoredTechniques = techniques.map(technique => {
                     let score = 0;
                     const matchReasons = [];
                     const matchedKeywords = [];
                     const matchedPatterns = [];
 
+                    // Track score breakdown
+                    let keywordScore = 0;
+                    let patternScore = 0;
+                    let phaseScore = 0;
+                    let whenToUseScore = 0;
+
+                    // Track Q&A contributions
+                    const qaContributions = [];
+
                     // Match using the new matching_criteria
                     if (technique.matching_criteria) {
-                        // Keyword matching
+                        // Keyword matching with Q&A attribution
                         technique.matching_criteria.keywords.forEach(keyword => {
                             if (allFindings.toLowerCase().includes(keyword.toLowerCase())) {
                                 score += 10;
+                                keywordScore += 10;
                                 matchedKeywords.push(keyword);
+
+                                // Find which Q&A contributed this keyword
+                                qaMap.forEach(qa => {
+                                    if (qa.findings.includes(keyword.toLowerCase())) {
+                                        const existing = qaContributions.find(c => c.questionId === qa.questionId);
+                                        if (existing) {
+                                            existing.matchedTerms.push(keyword);
+                                            existing.points += 10;
+                                        } else {
+                                            qaContributions.push({
+                                                questionId: qa.questionId,
+                                                questionText: qa.questionText,
+                                                matchedTerms: [keyword],
+                                                points: 10
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         });
 
-                        // Discovery pattern matching (higher weight)
+                        // Discovery pattern matching (higher weight) with Q&A attribution
                         technique.matching_criteria.discovery_patterns.forEach(pattern => {
                             if (allFindings.toLowerCase().includes(pattern.toLowerCase())) {
                                 score += 15;
+                                patternScore += 15;
                                 matchedPatterns.push(pattern);
+
+                                // Find which Q&A contributed this pattern
+                                qaMap.forEach(qa => {
+                                    if (qa.findings.includes(pattern.toLowerCase())) {
+                                        const existing = qaContributions.find(c => c.questionId === qa.questionId);
+                                        if (existing) {
+                                            existing.matchedTerms.push(pattern);
+                                            existing.points += 15;
+                                        } else {
+                                            qaContributions.push({
+                                                questionId: qa.questionId,
+                                                questionText: qa.questionText,
+                                                matchedTerms: [pattern],
+                                                points: 15
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         });
 
                         // Phase indicator matching
                         const phaseMatch = this.matchPhaseIndicators(state, technique.matching_criteria.phase_indicators);
                         score += phaseMatch.score;
+                        phaseScore = phaseMatch.score;
                         if (phaseMatch.reason) {
                             matchReasons.push(phaseMatch.reason);
                         }
@@ -5574,6 +5879,7 @@
                     // When to use matching
                     const whenToUseMatch = this.matchWhenToUse(allFindings, technique.when_to_use);
                     score += whenToUseMatch.score;
+                    whenToUseScore = whenToUseMatch.score;
 
                     // Generate client-contextualized benefit statement
                     if (matchedKeywords.length > 0 || matchedPatterns.length > 0) {
@@ -5591,17 +5897,42 @@
                         matchReasons.push(`Detected in your findings: ${matchedKeywords.slice(0, 3).join(', ')}`);
                     }
 
+                    // Calculate urgency
+                    const urgency = this.calculateUrgency(score, technique, detectedBlockers);
+
+                    // Generate contextual rationale
+                    const contextualRationale = this.generateContextualRationale(technique, qaContributions, clientName);
+
+                    // Contextualize outcomes
+                    const contextualizedOutcomes = this.contextualizeOutcomes(technique.outcomes, qaContributions, clientName);
+
                     return {
                         technique,
                         score,
-                        matchReasons: this.deduplicateReasons(matchReasons)
+                        matchReasons: this.deduplicateReasons(matchReasons),
+                        // NEW FIELDS:
+                        scoreBreakdown: {
+                            keywordScore,
+                            patternScore,
+                            phaseScore,
+                            whenToUseScore,
+                            matchedKeywords,
+                            matchedPatterns
+                        },
+                        qaContributions: qaContributions.sort((a, b) => b.points - a.points),
+                        urgency,
+                        contextualRationale,
+                        contextualizedOutcomes
                     };
                 });
 
                 // Filter and sort
-                return scoredTechniques
+                let filtered = scoredTechniques
                     .filter(t => t.score > 0)
                     .sort((a, b) => b.score - a.score);
+
+                // Apply sequencing logic
+                return this.applySequencingLogic(filtered);
             }
 
             /**
@@ -5656,6 +5987,184 @@
                 }
 
                 return benefit;
+            }
+
+            /**
+             * Build Q&A Attribution Map - maps each question to its findings for attribution tracking
+             */
+            buildQAAttributionMap(state) {
+                const qaMap = [];
+
+                Object.values(state.questions).forEach(q => {
+                    if (q.status === 'answered' && q.findings && q.findings.trim()) {
+                        qaMap.push({
+                            questionId: q.questionId,
+                            questionText: q.text,
+                            findings: q.findings.toLowerCase(),
+                            phase: q.phase
+                        });
+                    }
+                    if (q.notes && q.notes.trim()) {
+                        qaMap.push({
+                            questionId: q.questionId,
+                            questionText: q.text + ' (notes)',
+                            findings: q.notes.toLowerCase(),
+                            phase: q.phase
+                        });
+                    }
+                });
+
+                return qaMap;
+            }
+
+            /**
+             * Detect blockers from findings
+             */
+            detectBlockers(allFindings) {
+                const detectedBlockers = [];
+
+                blockerPatterns.forEach(blocker => {
+                    blocker.patterns.forEach(pattern => {
+                        if (allFindings.toLowerCase().includes(pattern.toLowerCase())) {
+                            if (!detectedBlockers.find(b => b.id === blocker.id)) {
+                                detectedBlockers.push({
+                                    id: blocker.id,
+                                    matchedPattern: pattern,
+                                    urgencyBoost: blocker.urgencyBoost
+                                });
+                            }
+                        }
+                    });
+                });
+
+                return detectedBlockers;
+            }
+
+            /**
+             * Calculate urgency level based on score and blockers
+             */
+            calculateUrgency(score, technique, detectedBlockers) {
+                const hasBlockers = detectedBlockers.length > 0;
+                const hasCriticalBlockers = detectedBlockers.some(b => b.urgencyBoost === 'critical');
+
+                let level, indicator;
+
+                if (score > 70 && hasCriticalBlockers) {
+                    level = 'critical';
+                    indicator = '🔴';
+                } else if (score >= 40 || (score > 70 && !hasCriticalBlockers)) {
+                    level = 'important';
+                    indicator = '🟠';
+                } else {
+                    level = 'valuable';
+                    indicator = '🟡';
+                }
+
+                return {
+                    level,
+                    indicator,
+                    hasBlockers,
+                    blockerReasons: detectedBlockers.map(b => b.matchedPattern)
+                };
+            }
+
+            /**
+             * Generate contextual rationale based on Q&A contributions
+             */
+            generateContextualRationale(technique, qaContributions, clientName) {
+                if (qaContributions.length === 0) {
+                    return `This technique is recommended for ${clientName} based on the current discovery phase.`;
+                }
+
+                const topContribution = qaContributions[0];
+                let rationale = `Based on your finding about "${topContribution.matchedTerms.slice(0, 2).join(', ')}"`;
+
+                if (qaContributions.length > 1) {
+                    rationale += ` and ${qaContributions.length - 1} other related finding${qaContributions.length > 2 ? 's' : ''}`;
+                }
+
+                rationale += `, ${clientName} would benefit from ${technique.name}. `;
+
+                // Add specific benefit based on technique
+                if (technique.outcomes && technique.outcomes[0]) {
+                    rationale += `This will help achieve: ${technique.outcomes[0]}.`;
+                }
+
+                return rationale;
+            }
+
+            /**
+             * Contextualize outcomes tied to detected client situation
+             */
+            contextualizeOutcomes(outcomes, qaContributions, clientName) {
+                if (!outcomes || outcomes.length === 0) return [];
+
+                return outcomes.map((outcome, index) => {
+                    let contextualizedOutcome = outcome;
+
+                    // Add client context to first few outcomes
+                    if (index < 2 && qaContributions.length > 0) {
+                        const relevantTerms = qaContributions
+                            .flatMap(qa => qa.matchedTerms)
+                            .slice(0, 2);
+
+                        if (relevantTerms.length > 0) {
+                            contextualizedOutcome = `${outcome} (addresses: ${relevantTerms.join(', ')})`;
+                        }
+                    }
+
+                    return contextualizedOutcome;
+                });
+            }
+
+            /**
+             * Apply sequencing logic from dependency graph
+             */
+            applySequencingLogic(scoredTechniques) {
+                const techniqueIds = scoredTechniques.map(t => t.technique.id);
+
+                return scoredTechniques.map(rec => {
+                    const techId = rec.technique.id;
+                    const dependencies = techniqueDependencyGraph[techId];
+
+                    let prerequisites = [];
+                    let sequenceRationale = '';
+
+                    if (dependencies) {
+                        // Find prerequisites that are also recommended
+                        prerequisites = dependencies.prerequisites.filter(prereq =>
+                            techniqueIds.includes(prereq)
+                        );
+
+                        if (prerequisites.length > 0) {
+                            const prereqNames = prerequisites.map(prereq => {
+                                const found = scoredTechniques.find(t => t.technique.id === prereq);
+                                return found ? found.technique.name : prereq;
+                            });
+                            sequenceRationale = `Consider completing ${prereqNames.join(', ')} first for better results.`;
+                        } else if (dependencies.enables.length > 0) {
+                            const enabledNames = dependencies.enables
+                                .filter(e => techniqueIds.includes(e))
+                                .map(e => {
+                                    const found = scoredTechniques.find(t => t.technique.id === e);
+                                    return found ? found.technique.name : e;
+                                })
+                                .slice(0, 2);
+
+                            if (enabledNames.length > 0) {
+                                sequenceRationale = `This technique will enable: ${enabledNames.join(', ')}.`;
+                            }
+                        }
+                    }
+
+                    return {
+                        ...rec,
+                        sequencing: {
+                            prerequisites,
+                            sequenceRationale
+                        }
+                    };
+                });
             }
 
             /**
@@ -6013,6 +6522,11 @@
                     <div class="summary-section">
                         <h3>📋 Recommended Discovery Techniques (Top 10)</h3>
                         <p style="color: #666; margin-bottom: 15px;">Based on your discovery findings, here are specific techniques the TEAM should use:</p>
+                        <div class="urgency-legend" style="display: flex; gap: 20px; font-size: 0.85em; color: #888; margin-bottom: 12px; padding: 8px 12px; background: #f8f9fa; border-radius: 6px;">
+                            <span title="Score >70 with blockers detected (immediate action needed)">🔴 Critical</span>
+                            <span title="Score 40-69 (address soon)">🟠 Important</span>
+                            <span title="Score <40 (sequence as capacity allows)">🟡 Valuable</span>
+                        </div>
                         ${summary.discoveryTechniques && summary.discoveryTechniques.length > 0 ? `
                             <div class="technique-filters">
                                 <div class="filter-group">
@@ -6028,15 +6542,18 @@
                                     const technique = rec.technique;
                                     const categorySlug = technique.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
-
                                     // Determine maturity level
                                     const maturityLevel = technique.team_maturity.some(m => m.toLowerCase().includes('beginner')) ? 'beginner' :
                                                          technique.team_maturity.some(m => m.toLowerCase().includes('advanced')) ? 'advanced' : 'intermediate';
+
+                                    // Get urgency info
+                                    const urgency = rec.urgency || { level: 'valuable', indicator: '🟡' };
 
                                     return `
                                         <div class="technique-card" data-collapsed="false" data-maturity="${maturityLevel}">
                                             <div class="technique-header">
                                                 <div class="header-left">
+                                                    <span class="urgency-indicator ${urgency.level}" title="Urgency: ${urgency.level}">${urgency.indicator}</span>
                                                     <h4>${index + 1}. ${technique.name}</h4>
                                                     <span class="technique-badge ${categorySlug}">${technique.category}</span>
                                                     <span class="score-badge">Score: ${rec.score}</span>
@@ -6048,45 +6565,120 @@
                                             <div class="technique-collapsible-content">
                                                 <p class="technique-description">${technique.description}</p>
 
-                                            ${rec.matchReasons.length > 0 ? `
-                                                <div class="technique-match-reasons">
-                                                    <strong>Why this technique fits:</strong>
-                                                    <ul>
-                                                        ${rec.matchReasons.map(reason => `<li>${reason}</li>`).join('')}
-                                                    </ul>
-                                                </div>
-                                            ` : ''}
+                                                <div class="technique-details-sections">
+                                                    <!-- Section 1: Why This Matters (default expanded) -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="true">Why This Matters</button>
+                                                        <div class="section-content">
+                                                            <div class="contextual-rationale">${rec.contextualRationale || ''}</div>
+                                                            ${rec.qaContributions && rec.qaContributions.length > 0 ? `
+                                                                <div class="qa-attribution">
+                                                                    <div class="qa-attribution-header">Based on your answers:</div>
+                                                                    ${rec.qaContributions.slice(0, 3).map(qa => `
+                                                                        <div class="qa-item">
+                                                                            <div class="qa-question">${qa.questionText}</div>
+                                                                            <div class="qa-terms">Matched: ${qa.matchedTerms.slice(0, 3).join(', ')}</div>
+                                                                            <div class="qa-points">+${qa.points} points</div>
+                                                                        </div>
+                                                                    `).join('')}
+                                                                </div>
+                                                            ` : ''}
+                                                        </div>
+                                                    </div>
 
-                                            <div class="technique-meta">
-                                                <div class="meta-item">
-                                                    <span class="meta-label">When to use:</span>
-                                                    <span class="meta-value">${technique.when_to_use}</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <span class="meta-label">Resources needed:</span>
-                                                    <span class="meta-value">${technique.resources_needed.join(', ')}</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <span class="meta-label">Team maturity:</span>
-                                                    <span class="meta-value">${technique.team_maturity.map(level => {
-                                                        if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
-                                                        if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
-                                                        if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
-                                                        return level;
-                                                    }).join(', ')}</span>
-                                                </div>
-                                            </div>
+                                                    <!-- Section 2: Expected Outcomes -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="false">Expected Outcomes</button>
+                                                        <div class="section-content collapsed">
+                                                            <div class="contextualized-outcomes">
+                                                                <ul>
+                                                                    ${(rec.contextualizedOutcomes || technique.outcomes).map(o => `<li>${o}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="technique-outcomes">
-                                                <strong>Expected outcomes:</strong>
-                                                <ul>
-                                                    ${technique.outcomes.map(o => `<li>${o}</li>`).join('')}
-                                                </ul>
-                                            </div>
+                                                    <!-- Section 3: Sequencing -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="false">Sequencing</button>
+                                                        <div class="section-content collapsed">
+                                                            <div class="sequencing-info">
+                                                                ${rec.sequencing && rec.sequencing.prerequisites && rec.sequencing.prerequisites.length > 0 ? `
+                                                                    <div class="sequencing-prerequisites">
+                                                                        <strong>Prerequisites:</strong>
+                                                                        <ul class="sequencing-prerequisite-list">
+                                                                            ${rec.sequencing.prerequisites.map(p => `<li>${p}</li>`).join('')}
+                                                                        </ul>
+                                                                    </div>
+                                                                ` : ''}
+                                                                <p>${rec.sequencing?.sequenceRationale || 'This technique can be started independently.'}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="technique-source">
-                                                <small>Source: ${technique.svpg_source}</small>
-                                            </div>
+                                                    <!-- Section 4: Score Breakdown -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="false">Score Breakdown</button>
+                                                        <div class="section-content collapsed">
+                                                            <div class="score-breakdown">
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Keyword matches:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.keywordScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.keywordScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Pattern matches:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.patternScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.patternScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Phase alignment:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.phaseScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.phaseScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Timing match:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.whenToUseScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.whenToUseScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Total:</span>
+                                                                    <span class="score-value">${rec.score}</span>
+                                                                </div>
+                                                                ${rec.scoreBreakdown?.matchedKeywords?.length > 0 ? `
+                                                                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                                                                        <strong>Keywords:</strong> ${rec.scoreBreakdown.matchedKeywords.slice(0, 5).join(', ')}
+                                                                    </div>
+                                                                ` : ''}
+                                                                ${rec.scoreBreakdown?.matchedPatterns?.length > 0 ? `
+                                                                    <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                                                        <strong>Patterns:</strong> ${rec.scoreBreakdown.matchedPatterns.slice(0, 3).join(', ')}
+                                                                    </div>
+                                                                ` : ''}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="technique-meta">
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">When to use:</span>
+                                                        <span class="meta-value">${technique.when_to_use}</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">Resources needed:</span>
+                                                        <span class="meta-value">${technique.resources_needed.join(', ')}</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">Team maturity:</span>
+                                                        <span class="meta-value">${technique.team_maturity.map(level => {
+                                                            if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
+                                                            if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
+                                                            if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
+                                                            return level;
+                                                        }).join(', ')}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="technique-source">
+                                                    <small>Source: ${technique.svpg_source}</small>
+                                                </div>
                                             </div>
                                         </div>
                                     `;
@@ -6104,53 +6696,116 @@
                                     const technique = rec.technique;
                                     const categorySlug = technique.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
+                                    // Get urgency info
+                                    const urgency = rec.urgency || { level: 'valuable', indicator: '🟡' };
+
                                     return `
-                                        <div class="technique-card coaching-card">
+                                        <div class="technique-card coaching-card" data-collapsed="false">
                                             <div class="technique-header">
-                                                <h4>${index + 1}. ${technique.name}</h4>
-                                                <span class="technique-badge coaching">${technique.category}</span>
-                                                <span class="score-badge coaching">Score: ${rec.score}</span>
+                                                <div class="header-left">
+                                                    <span class="urgency-indicator ${urgency.level}" title="Urgency: ${urgency.level}">${urgency.indicator}</span>
+                                                    <h4>${index + 1}. ${technique.name}</h4>
+                                                    <span class="technique-badge coaching">${technique.category}</span>
+                                                    <span class="score-badge coaching">Score: ${rec.score}</span>
+                                                </div>
+                                                <button class="collapse-btn" aria-label="Toggle details">
+                                                    <span class="collapse-icon">▼</span>
+                                                </button>
                                             </div>
-                                            <p class="technique-description">${technique.description}</p>
+                                            <div class="technique-collapsible-content">
+                                                <p class="technique-description">${technique.description}</p>
 
-                                            ${rec.matchReasons.length > 0 ? `
-                                                <div class="technique-match-reasons">
-                                                    <strong>Why this technique fits:</strong>
-                                                    <ul>
-                                                        ${rec.matchReasons.map(reason => `<li>${reason}</li>`).join('')}
-                                                    </ul>
-                                                </div>
-                                            ` : ''}
+                                                <div class="technique-details-sections">
+                                                    <!-- Section 1: Why This Matters (default expanded) -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="true">Why This Matters</button>
+                                                        <div class="section-content">
+                                                            <div class="contextual-rationale">${rec.contextualRationale || ''}</div>
+                                                            ${rec.qaContributions && rec.qaContributions.length > 0 ? `
+                                                                <div class="qa-attribution">
+                                                                    <div class="qa-attribution-header">Based on your answers:</div>
+                                                                    ${rec.qaContributions.slice(0, 3).map(qa => `
+                                                                        <div class="qa-item">
+                                                                            <div class="qa-question">${qa.questionText}</div>
+                                                                            <div class="qa-terms">Matched: ${qa.matchedTerms.slice(0, 3).join(', ')}</div>
+                                                                            <div class="qa-points">+${qa.points} points</div>
+                                                                        </div>
+                                                                    `).join('')}
+                                                                </div>
+                                                            ` : ''}
+                                                        </div>
+                                                    </div>
 
-                                            <div class="technique-meta">
-                                                <div class="meta-item">
-                                                    <span class="meta-label">When to use:</span>
-                                                    <span class="meta-value">${technique.when_to_use}</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <span class="meta-label">Resources needed:</span>
-                                                    <span class="meta-value">${technique.resources_needed.join(', ')}</span>
-                                                </div>
-                                                <div class="meta-item">
-                                                    <span class="meta-label">Team maturity:</span>
-                                                    <span class="meta-value">${technique.team_maturity.map(level => {
-                                                        if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
-                                                        if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
-                                                        if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
-                                                        return level;
-                                                    }).join(', ')}</span>
-                                                </div>
-                                            </div>
+                                                    <!-- Section 2: Expected Outcomes -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="false">Expected Outcomes</button>
+                                                        <div class="section-content collapsed">
+                                                            <div class="contextualized-outcomes">
+                                                                <ul>
+                                                                    ${(rec.contextualizedOutcomes || technique.outcomes).map(o => `<li>${o}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="technique-outcomes">
-                                                <strong>Expected outcomes:</strong>
-                                                <ul>
-                                                    ${technique.outcomes.map(o => `<li>${o}</li>`).join('')}
-                                                </ul>
-                                            </div>
+                                                    <!-- Section 3: Score Breakdown -->
+                                                    <div class="detail-section">
+                                                        <button class="section-toggle" aria-expanded="false">Score Breakdown</button>
+                                                        <div class="section-content collapsed">
+                                                            <div class="score-breakdown">
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Keyword matches:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.keywordScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.keywordScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Pattern matches:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.patternScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.patternScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Phase alignment:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.phaseScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.phaseScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Timing match:</span>
+                                                                    <span class="score-value ${rec.scoreBreakdown?.whenToUseScore === 0 ? 'zero' : ''}">+${rec.scoreBreakdown?.whenToUseScore || 0}</span>
+                                                                </div>
+                                                                <div class="score-row">
+                                                                    <span class="score-label">Total:</span>
+                                                                    <span class="score-value">${rec.score}</span>
+                                                                </div>
+                                                                ${rec.scoreBreakdown?.matchedKeywords?.length > 0 ? `
+                                                                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                                                                        <strong>Keywords:</strong> ${rec.scoreBreakdown.matchedKeywords.slice(0, 5).join(', ')}
+                                                                    </div>
+                                                                ` : ''}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                            <div class="technique-source">
-                                                <small>Source: ${technique.svpg_source}</small>
+                                                <div class="technique-meta">
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">When to use:</span>
+                                                        <span class="meta-value">${technique.when_to_use}</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">Resources needed:</span>
+                                                        <span class="meta-value">${technique.resources_needed.join(', ')}</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <span class="meta-label">Team maturity:</span>
+                                                        <span class="meta-value">${technique.team_maturity.map(level => {
+                                                            if (level === 'beginner') return 'Beginner (Teams new to product discovery)';
+                                                            if (level === 'intermediate') return 'Intermediate (Teams with some discovery experience)';
+                                                            if (level === 'advanced') return 'Advanced (Experienced teams with mature practices)';
+                                                            return level;
+                                                        }).join(', ')}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="technique-source">
+                                                    <small>Source: ${technique.svpg_source}</small>
+                                                </div>
                                             </div>
                                         </div>
                                     `;
@@ -6462,6 +7117,124 @@
             testFramework.assert(typeof usage.mb === 'number', 'MB should be a number');
             testFramework.assert(typeof usage.percentage === 'number', 'Percentage should be a number');
             testFramework.assert(usage.percentage >= 0, 'Percentage should be >= 0');
+        });
+
+        // ============================================
+        // TRANSPARENCY & RATIONALE FEATURE TESTS
+        // ============================================
+
+        testFramework.test('TechniqueRecommender - Score Breakdown Tracking', () => {
+            const recommender = new TechniqueRecommender();
+            const mockState = {
+                metadata: { clientName: 'TestClient' },
+                questions: {
+                    q1: { questionId: 'q1', text: 'Test question', findings: 'customer interviews needed', status: 'answered', phase: 1 }
+                }
+            };
+
+            const techniques = recommender.getAllDiscoveryTechniques();
+            const allFindings = recommender.extractAllFindings(mockState);
+            const results = recommender.scoreAndRankTechniques(techniques, allFindings, mockState);
+
+            // Check that we get results with score breakdown
+            testFramework.assert(results.length > 0, 'Should return scored techniques');
+
+            const firstResult = results[0];
+            testFramework.assertNotNull(firstResult.scoreBreakdown, 'Should have scoreBreakdown');
+            testFramework.assert(typeof firstResult.scoreBreakdown.keywordScore === 'number', 'keywordScore should be a number');
+            testFramework.assert(typeof firstResult.scoreBreakdown.patternScore === 'number', 'patternScore should be a number');
+            testFramework.assert(typeof firstResult.scoreBreakdown.phaseScore === 'number', 'phaseScore should be a number');
+            testFramework.assert(typeof firstResult.scoreBreakdown.whenToUseScore === 'number', 'whenToUseScore should be a number');
+        });
+
+        testFramework.test('TechniqueRecommender - Urgency Classification', () => {
+            const recommender = new TechniqueRecommender();
+
+            // Test critical urgency (high score + blockers)
+            const criticalBlockers = [{ id: 'no_customer_contact', matchedPattern: 'no customer', urgencyBoost: 'critical' }];
+            const urgencyCritical = recommender.calculateUrgency(75, {}, criticalBlockers);
+            testFramework.assertEqual(urgencyCritical.level, 'critical', 'Score > 70 with critical blockers should be critical');
+            testFramework.assertEqual(urgencyCritical.indicator, '🔴', 'Critical should have red indicator');
+
+            // Test important urgency (medium score)
+            const urgencyImportant = recommender.calculateUrgency(50, {}, []);
+            testFramework.assertEqual(urgencyImportant.level, 'important', 'Score 40-69 should be important');
+            testFramework.assertEqual(urgencyImportant.indicator, '🟠', 'Important should have orange indicator');
+
+            // Test valuable urgency (low score)
+            const urgencyValuable = recommender.calculateUrgency(25, {}, []);
+            testFramework.assertEqual(urgencyValuable.level, 'valuable', 'Score < 40 should be valuable');
+            testFramework.assertEqual(urgencyValuable.indicator, '🟡', 'Valuable should have yellow indicator');
+        });
+
+        testFramework.test('TechniqueRecommender - QA Attribution', () => {
+            const recommender = new TechniqueRecommender();
+            const mockState = {
+                metadata: { clientName: 'TestClient' },
+                questions: {
+                    q1: { questionId: 'q1', text: 'Why does this product exist?', findings: 'We need customer interviews', status: 'answered', phase: 1 },
+                    q2: { questionId: 'q2', text: 'Who experiences the problem?', findings: 'Users are unclear about problem', status: 'answered', phase: 1 }
+                }
+            };
+
+            const qaMap = recommender.buildQAAttributionMap(mockState);
+            testFramework.assertEqual(qaMap.length, 2, 'Should have 2 Q&A entries');
+            testFramework.assertEqual(qaMap[0].questionId, 'q1', 'First entry should be q1');
+            testFramework.assert(qaMap[0].findings.includes('customer'), 'Findings should contain customer');
+        });
+
+        testFramework.test('TechniqueRecommender - Blocker Detection', () => {
+            const recommender = new TechniqueRecommender();
+
+            // Test with blocker pattern
+            const findingsWithBlocker = 'we have no customer contact with users';
+            const blockers = recommender.detectBlockers(findingsWithBlocker);
+            testFramework.assert(blockers.length > 0, 'Should detect blocker');
+            testFramework.assertEqual(blockers[0].id, 'no_customer_contact', 'Should detect no_customer_contact blocker');
+
+            // Test without blocker pattern
+            const findingsWithoutBlocker = 'we regularly talk to users';
+            const noBlockers = recommender.detectBlockers(findingsWithoutBlocker);
+            testFramework.assertEqual(noBlockers.length, 0, 'Should not detect blockers');
+        });
+
+        testFramework.test('TechniqueRecommender - Sequencing Logic', () => {
+            const recommender = new TechniqueRecommender();
+
+            // Create mock scored techniques with known dependencies
+            const mockScoredTechniques = [
+                { technique: { id: 'team_objective', name: 'Team Objective' }, score: 80 },
+                { technique: { id: 'opportunity_assessment', name: 'Opportunity Assessment' }, score: 70 },
+                { technique: { id: 'customer_interviews', name: 'Customer Interviews' }, score: 60 }
+            ];
+
+            const result = recommender.applySequencingLogic(mockScoredTechniques);
+
+            // Check that sequencing info was added
+            testFramework.assertNotNull(result[0].sequencing, 'Should have sequencing info');
+            testFramework.assert(Array.isArray(result[0].sequencing.prerequisites), 'Should have prerequisites array');
+
+            // team_objective should enable opportunity_assessment
+            const teamObj = result.find(r => r.technique.id === 'team_objective');
+            testFramework.assert(teamObj.sequencing.sequenceRationale.length > 0, 'team_objective should have sequence rationale');
+        });
+
+        testFramework.test('TechniqueRecommender - Contextual Rationale Generation', () => {
+            const recommender = new TechniqueRecommender();
+            const mockTechnique = {
+                id: 'customer_interviews',
+                name: 'Customer Interviews',
+                outcomes: ['Deep customer understanding', 'Validated assumptions']
+            };
+            const mockQAContributions = [
+                { questionId: 'q1', questionText: 'Who experiences the problem?', matchedTerms: ['customer', 'interviews'], points: 25 }
+            ];
+
+            const rationale = recommender.generateContextualRationale(mockTechnique, mockQAContributions, 'TestClient');
+
+            testFramework.assert(rationale.includes('TestClient'), 'Rationale should include client name');
+            testFramework.assert(rationale.includes('customer'), 'Rationale should reference matched terms');
+            testFramework.assert(rationale.length > 50, 'Rationale should be meaningful length');
         });
 
         // Global manager variables

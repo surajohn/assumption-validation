@@ -382,8 +382,8 @@ test.describe('LEA Demo - Discovery Coaching Assistant', () => {
       const modal = page.locator('text=LEA Regression Tests');
       await expect(modal).toBeVisible();
 
-      // Show all tests passed
-      await expect(page.locator('text=Passed: 15')).toBeVisible();
+      // Show all tests passed (21 tests: 9 original + 6 version manager + 6 transparency & rationale tests)
+      await expect(page.locator('text=Passed: 21')).toBeVisible();
       await expect(page.locator('text=Failed: 0')).toBeVisible();
 
       await page.waitForTimeout(2000);

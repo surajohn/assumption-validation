@@ -13,7 +13,7 @@ export default defineConfig({
     acceptDownloads: true,
   },
   webServer: {
-    command: 'python3 -m http.server 8888',
+    command: 'cd .. && python3 -m http.server 8888',
     url: 'http://localhost:8888',
     reuseExistingServer: !process.env.CI,
   },

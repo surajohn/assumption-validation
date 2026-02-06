@@ -30,12 +30,12 @@ test.describe('LEA UI Tests', () => {
     // Wait for the modal to appear
     await page.waitForSelector('div:has-text("LEA Regression Tests")');
 
-    // Check for success text (15 tests: 9 original + 6 version manager tests)
-    const successText = await page.locator('text=15 tests');
+    // Check for success text (21 tests: 9 original + 6 version manager + 6 transparency & rationale tests)
+    const successText = await page.locator('text=21 tests');
     await expect(successText).toBeVisible();
 
-    // Verify all 15 passed
-    const passedText = await page.locator('text=Passed: 15');
+    // Verify all 21 passed
+    const passedText = await page.locator('text=Passed: 21');
     await expect(passedText).toBeVisible();
 
     // Verify no failures
